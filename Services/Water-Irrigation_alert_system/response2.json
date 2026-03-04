@@ -1,0 +1,1 @@
+{"statusCode":200,"body":"{\"farmerId\":\"91761321-ff4a-4dd8-9e5c-b3c0a0f8103d\",\"decision\":\"irrigate\",\"reason\":\"Deficit 60.0mm exceeds threshold 44.0mm\",\"soilMoisture\":20,\"deficit\":60,\"messageSent\":true}"}

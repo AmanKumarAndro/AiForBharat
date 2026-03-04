@@ -1,0 +1,7 @@
+Environment: darwin, node 24.2.0, framework 3.40.0, plugin 7.2.3, SDK 4.5.1
+Docs:        docs.serverless.com
+Support:     forum.serverless.com
+Bugs:        github.com/serverless/serverless/issues
+
+Error:
+Serverless plugin "serverless-offline" not found. Make sure it's installed and listed in the "plugins" section of your serverless config file. Run "serverless plugin install -n serverless-offline" to install it.

@@ -1,0 +1,23 @@
+Running "serverless" from node_modules
+
+Deploying farmer-voice-ai to stage dev (us-east-1)
+Warning: Function agentQuery has timeout of 60 seconds, however, it's attached to API Gateway so it's automatically limited to 30 seconds.
+
+✔ Service deployed to stack farmer-voice-ai-dev (77s)
+
+endpoints:
+  POST - https://mirqpiqsp9.execute-api.us-east-1.amazonaws.com/dev/transcribe
+  POST - https://mirqpiqsp9.execute-api.us-east-1.amazonaws.com/dev/query
+  POST - https://mirqpiqsp9.execute-api.us-east-1.amazonaws.com/dev/synthesize
+  POST - https://mirqpiqsp9.execute-api.us-east-1.amazonaws.com/dev/voice-query
+  POST - https://mirqpiqsp9.execute-api.us-east-1.amazonaws.com/dev/agent-query
+  POST - https://mirqpiqsp9.execute-api.us-east-1.amazonaws.com/dev/history
+functions:
+  transcribe: farmer-voice-ai-dev-transcribe (6.2 MB)
+  query: farmer-voice-ai-dev-query (6.2 MB)
+  synthesize: farmer-voice-ai-dev-synthesize (6.2 MB)
+  voiceQuery: farmer-voice-ai-dev-voiceQuery (6.2 MB)
+  agentQuery: farmer-voice-ai-dev-agentQuery (6.2 MB)
+  dynamoToolLambda: farmer-voice-ai-dev-dynamoToolLambda (6.2 MB)
+  youtubeToolLambda: farmer-voice-ai-dev-youtubeToolLambda (6.2 MB)
+  getHistory: farmer-voice-ai-dev-getHistory (6.2 MB)

@@ -1,0 +1,2 @@
+# No external dependencies required for Lambda
+# boto3 is pre-installed in AWS Lambda Python runtime

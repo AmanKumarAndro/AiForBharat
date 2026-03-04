@@ -1,0 +1,17 @@
+
+[0;34m========================================[0m
+[0;34mKisanVoice Production E2E Test Suite[0m
+[0;34m========================================[0m
+
+[1;33mℹ Starting comprehensive system test...[0m
+[1;33mℹ Timestamp: Sun Mar  1 03:31:34 IST 2026[0m
+[1;33mℹ Region: ap-south-1[0m
+[1;33mℹ API Base URL: https://ys4xa8tu60.execute-api.ap-south-1.amazonaws.com/dev[0m
+
+This will create test data in PRODUCTION. Continue? (yes/no): 
+[0;34m========================================[0m
+[0;34mTEST 1: Register Farmers[0m
+[0;34m========================================[0m
+
+[0;34m→ Registering: Rajesh Kumar (wheat, Karnal)[0m
+[0;32m✓ Registered Rajesh Kumar - ID: b23d4a91-bd27-4a63-8916-ed20348649df[0m

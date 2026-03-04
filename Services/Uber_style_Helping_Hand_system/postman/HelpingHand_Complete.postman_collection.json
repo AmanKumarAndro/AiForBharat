@@ -1,0 +1,424 @@
+{
+  "info": {
+    "name": "Helping Hand - Complete Test Suite",
+    "description": "Complete API testing for Helping Hand farm services marketplace",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://nhl6zxlp70.execute-api.ap-south-1.amazonaws.com/prod",
+      "type": "string"
+    },
+    {
+      "key": "request_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "request_id_2",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Register Provider",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Provider ID returned\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.provider_id).to.exist;",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/provider/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"phone\": \"+919876543213\",\n  \"name\": \"Mahesh Deshmukh\",\n  \"service_type\": \"TRACTOR\",\n  \"pin_code\": \"411001\",\n  \"nearby_pincodes\": [\"411002\", \"411003\"],\n  \"price_per_hour\": 550,\n  \"device_token\": \"arn:aws:sns:ap-south-1:YOUR_AWS_ACCOUNT_ID:endpoint/FCM/HelpingHand/mahesh-device\"\n}"
+        }
+      }
+    },
+    {
+      "name": "2. Create Service Request (TRACTOR)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Request ID returned\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.request_id).to.exist;",
+              "    pm.collectionVariables.set(\"request_id\", jsonData.request_id);",
+              "});",
+              "",
+              "pm.test(\"Status is PENDING\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.status).to.eql(\"PENDING\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/request",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"farmer_id\": \"+919999999999\",\n  \"farmer_name\": \"Rajesh Sharma\",\n  \"service_type\": \"TRACTOR\",\n  \"farmer_pincode\": \"411001\",\n  \"estimated_price\": 500\n}"
+        }
+      }
+    },
+    {
+      "name": "3. Get Request Status (Wait 5s first)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Status is NOTIFYING or MATCHED\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.status).to.be.oneOf([\"NOTIFYING\", \"MATCHED\", \"PENDING\"]);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/status/{{request_id}}"
+      }
+    },
+    {
+      "name": "4. Accept Request (Provider)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Provider details returned\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.provider).to.exist;",
+              "    pm.expect(jsonData.provider.name).to.exist;",
+              "    pm.expect(jsonData.provider.phone).to.exist;",
+              "    pm.expect(jsonData.provider.rating).to.be.a('number');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/accept",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"request_id\": \"{{request_id}}\",\n  \"provider_id\": \"PRV_9876543210\"\n}"
+        }
+      }
+    },
+    {
+      "name": "5. Get Status After Acceptance",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Status is MATCHED\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.status).to.eql(\"MATCHED\");",
+              "});",
+              "",
+              "pm.test(\"Provider details included\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.provider).to.exist;",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/status/{{request_id}}"
+      }
+    },
+    {
+      "name": "6. Complete and Rate Service",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Provider rating updated\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.provider_new_rating).to.be.a('number');",
+              "    pm.expect(jsonData.provider_total_jobs).to.be.a('number');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/complete",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"request_id\": \"{{request_id}}\",\n  \"rating\": 5\n}"
+        }
+      }
+    },
+    {
+      "name": "7. Race Condition - Create Second Request",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var jsonData = pm.response.json();",
+              "pm.collectionVariables.set(\"request_id_2\", jsonData.request_id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/request",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"farmer_id\": \"+919999999998\",\n  \"farmer_name\": \"Sunil Patil\",\n  \"service_type\": \"TRACTOR\",\n  \"farmer_pincode\": \"411001\",\n  \"estimated_price\": 500\n}"
+        }
+      }
+    },
+    {
+      "name": "8. Race Condition - First Provider Accepts",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/accept",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"request_id\": \"{{request_id_2}}\",\n  \"provider_id\": \"PRV_9876543210\"\n}"
+        }
+      }
+    },
+    {
+      "name": "9. Race Condition - Second Provider (Should Fail 409)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 409\", function () {",
+              "    pm.response.to.have.status(409);",
+              "});",
+              "",
+              "pm.test(\"Error message indicates already taken\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.error).to.include(\"already taken\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/accept",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"request_id\": \"{{request_id_2}}\",\n  \"provider_id\": \"PRV_9876543211\"\n}"
+        }
+      }
+    },
+    {
+      "name": "10. Invalid Service Type (Should Fail 400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"Error message about invalid service type\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.error).to.include(\"Invalid service_type\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/request",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"farmer_id\": \"+919999999999\",\n  \"farmer_name\": \"Test Farmer\",\n  \"service_type\": \"INVALID\",\n  \"farmer_pincode\": \"411001\",\n  \"estimated_price\": 500\n}"
+        }
+      }
+    },
+    {
+      "name": "11. Missing Required Fields (Should Fail 400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"Error message about missing field\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.error).to.include(\"Missing required field\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/request",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"farmer_id\": \"+919999999999\",\n  \"service_type\": \"TRACTOR\"\n}"
+        }
+      }
+    },
+    {
+      "name": "12. Request LABOUR Service",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Request created for LABOUR\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.request_id).to.exist;",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/request",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"farmer_id\": \"+919999999997\",\n  \"farmer_name\": \"Prakash Jadhav\",\n  \"service_type\": \"LABOUR\",\n  \"farmer_pincode\": \"411001\",\n  \"estimated_price\": 200\n}"
+        }
+      }
+    }
+  ]
+}

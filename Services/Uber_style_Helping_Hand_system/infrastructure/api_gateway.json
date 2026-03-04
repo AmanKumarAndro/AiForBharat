@@ -1,0 +1,94 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Helping Hand API",
+    "version": "1.0.0"
+  },
+  "basePath": "/prod",
+  "schemes": ["https"],
+  "paths": {
+    "/request": {
+      "post": {
+        "summary": "Create service request",
+        "x-amazon-apigateway-integration": {
+          "uri": "arn:aws:apigateway:REGION:lambda:path/2015-03-31/functions/arn:aws:lambda:REGION:ACCOUNT_ID:function:HH_CreateRequest/invocations",
+          "httpMethod": "POST",
+          "type": "aws_proxy"
+        },
+        "responses": {
+          "200": {
+            "description": "Request created"
+          }
+        }
+      }
+    },
+    "/accept": {
+      "post": {
+        "summary": "Accept service request",
+        "x-amazon-apigateway-integration": {
+          "uri": "arn:aws:apigateway:REGION:lambda:path/2015-03-31/functions/arn:aws:lambda:REGION:ACCOUNT_ID:function:HH_AcceptRequest/invocations",
+          "httpMethod": "POST",
+          "type": "aws_proxy"
+        },
+        "responses": {
+          "200": {
+            "description": "Request accepted"
+          }
+        }
+      }
+    },
+    "/complete": {
+      "post": {
+        "summary": "Complete and rate service",
+        "x-amazon-apigateway-integration": {
+          "uri": "arn:aws:apigateway:REGION:lambda:path/2015-03-31/functions/arn:aws:lambda:REGION:ACCOUNT_ID:function:HH_CompleteAndRate/invocations",
+          "httpMethod": "POST",
+          "type": "aws_proxy"
+        },
+        "responses": {
+          "200": {
+            "description": "Job completed"
+          }
+        }
+      }
+    },
+    "/status/{request_id}": {
+      "get": {
+        "summary": "Get request status",
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "uri": "arn:aws:apigateway:REGION:lambda:path/2015-03-31/functions/arn:aws:lambda:REGION:ACCOUNT_ID:function:HH_GetStatus/invocations",
+          "httpMethod": "POST",
+          "type": "aws_proxy"
+        },
+        "responses": {
+          "200": {
+            "description": "Request status"
+          }
+        }
+      }
+    },
+    "/provider/register": {
+      "post": {
+        "summary": "Register new provider",
+        "x-amazon-apigateway-integration": {
+          "uri": "arn:aws:apigateway:REGION:lambda:path/2015-03-31/functions/arn:aws:lambda:REGION:ACCOUNT_ID:function:HH_RegisterProvider/invocations",
+          "httpMethod": "POST",
+          "type": "aws_proxy"
+        },
+        "responses": {
+          "200": {
+            "description": "Provider registered"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "info": {
+    "name": "Helping Hand API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://nhl6zxlp70.execute-api.ap-south-1.amazonaws.com/prod"
+    },
+    {
+      "key": "request_id",
+      "value": ""
+    },
+    {
+      "key": "request_id_2",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Register Provider",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/provider/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"phone\": \"+919876543213\",\n  \"name\": \"Test Provider\",\n  \"service_type\": \"TRACTOR\",\n  \"pin_code\": \"411001\",\n  \"nearby_pincodes\": [\"411002\"],\n  \"price_per_hour\": 500,\n  \"device_token\": \"test-device-token\"\n}"
+        }
+      }
+    },
+    {
+      "name": "2. Create Request (Farmer)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "pm.collectionVariables.set('request_id', response.request_id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/request",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"farmer_id\": \"+919999999999\",\n  \"farmer_name\": \"Rajesh Sharma\",\n  \"service_type\": \"TRACTOR\",\n  \"farmer_pincode\": \"411001\",\n  \"estimated_price\": 500\n}"
+        }
+      }
+    },
+    {
+      "name": "3. Get Status",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/status/{{request_id}}"
+      }
+    },
+    {
+      "name": "4. Accept Request (Provider)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/accept",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"request_id\": \"{{request_id}}\",\n  \"provider_id\": \"PRV_9876543210\"\n}"
+        }
+      }
+    },
+    {
+      "name": "5. Complete and Rate",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/complete",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"request_id\": \"{{request_id}}\",\n  \"rating\": 5\n}"
+        }
+      }
+    },
+    {
+      "name": "6. Test Race Condition (Second Accept)",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": "{{base_url}}/accept",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"request_id\": \"{{request_id}}\",\n  \"provider_id\": \"PRV_9876543211\"\n}"
+        }
+      }
+    }
+  ]
+}

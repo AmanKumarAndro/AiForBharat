@@ -1,0 +1,22 @@
+{
+  "created_at": "2026-03-03T01:10:33.962925",
+  "total_documents": 11,
+  "categories": {
+    "articles": [],
+    "videos": [
+      "pest_control_videos.txt",
+      "fertilizer_videos.txt",
+      "wheat_farming_videos.txt",
+      "soil_testing_videos.txt",
+      "seed_treatment_videos.txt",
+      "irrigation_videos.txt",
+      "rice_farming_videos.txt",
+      "maize_farming_videos.txt",
+      "organic_farming_videos.txt",
+      "cotton_farming_videos.txt"
+    ],
+    "schemes": [
+      "government_schemes.txt"
+    ]
+  }
+}

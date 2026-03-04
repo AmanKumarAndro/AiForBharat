@@ -1,0 +1,118 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AI Agri Weather Intelligence Module - Lambda + API Gateway'
+
+Parameters:
+  OpenWeatherAPIKey:
+    Type: String
+    Description: OpenWeather API Key (pass via --parameter-overrides)
+    NoEcho: true
+
+Resources:
+  # IAM Role for Lambda
+  WeatherAdvisoryLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: weather-advisory-lambda-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: BedrockInvokePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: bedrock:InvokeModel
+                Resource: 
+                  - arn:aws:bedrock:*::foundation-model/*
+                  - arn:aws:bedrock:*:*:inference-profile/*
+
+  # Lambda Function
+  WeatherAdvisoryFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: weather-advisory
+      Runtime: python3.11
+      Handler: lambda_function.lambda_handler
+      Role: !GetAtt WeatherAdvisoryLambdaRole.Arn
+      Timeout: 15
+      MemorySize: 256
+      Environment:
+        Variables:
+          OPENWEATHER_API_KEY: !Ref OpenWeatherAPIKey
+      Code:
+        ZipFile: |
+          # Placeholder - upload function.zip after stack creation
+          def lambda_handler(event, context):
+              return {'statusCode': 200, 'body': 'Deploy function.zip'}
+
+  # API Gateway
+  WeatherAdvisoryAPI:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: weather-advisory-api
+      ProtocolType: HTTP
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'
+        AllowMethods:
+          - POST
+          - GET
+        AllowHeaders:
+          - '*'
+
+  # API Gateway Integration
+  APIIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref WeatherAdvisoryAPI
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !GetAtt WeatherAdvisoryFunction.Arn
+      PayloadFormatVersion: '2.0'
+
+  # API Gateway Route
+  APIRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref WeatherAdvisoryAPI
+      RouteKey: 'POST /weather/advisory'
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref APIIntegration
+
+  # API Gateway Stage
+  APIStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref WeatherAdvisoryAPI
+      StageName: prod
+      AutoDeploy: true
+
+  # Lambda Permission for API Gateway
+  APIInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref WeatherAdvisoryFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${WeatherAdvisoryAPI}/*/*
+
+Outputs:
+  APIEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub https://${WeatherAdvisoryAPI}.execute-api.${AWS::Region}.amazonaws.com/prod/weather/advisory
+  
+  LambdaFunctionName:
+    Description: Lambda function name
+    Value: !Ref WeatherAdvisoryFunction
+  
+  LambdaFunctionArn:
+    Description: Lambda function ARN
+    Value: !GetAtt WeatherAdvisoryFunction.Arn

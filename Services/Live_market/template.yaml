@@ -1,0 +1,93 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Commodity Market Analyzer with AWS Bedrock
+
+Globals:
+  Function:
+    Timeout: 60
+    MemorySize: 512
+    Runtime: python3.13
+
+Parameters:
+  ApiKey:
+    Type: String
+    Description: Data.gov.in API Key (pass via --parameter-overrides)
+    NoEcho: true
+  
+  BedrockModelId:
+    Type: String
+    Default: 'amazon.nova-micro-v1:0'
+    Description: Bedrock Model ID (amazon.nova-micro-v1:0 is FREE and available by default)
+
+Resources:
+  CommodityAnalyzerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: lambda_function.lambda_handler
+      Environment:
+        Variables:
+          API_KEY: !Ref ApiKey
+          BEDROCK_MODEL_ID: !Ref BedrockModelId
+      Policies:
+        - Statement:
+          - Effect: Allow
+            Action:
+              - bedrock:InvokeModel
+            Resource: '*'
+      Events:
+        AnalyzeApi:
+          Type: Api
+          Properties:
+            Path: /analyze
+            Method: post
+        FetchApi:
+          Type: Api
+          Properties:
+            Path: /fetch
+            Method: post
+        OptionsAnalyze:
+          Type: Api
+          Properties:
+            Path: /analyze
+            Method: options
+        OptionsFetch:
+          Type: Api
+          Properties:
+            Path: /fetch
+            Method: options
+
+  CommodityWebBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      WebsiteConfiguration:
+        IndexDocument: index.html
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+
+  CommodityWebBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref CommodityWebBucket
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Sub '${CommodityWebBucket.Arn}/*'
+
+Outputs:
+  ApiEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
+  
+  WebsiteURL:
+    Description: S3 Website URL
+    Value: !GetAtt CommodityWebBucket.WebsiteURL
+  
+  BucketName:
+    Description: S3 Bucket Name
+    Value: !Ref CommodityWebBucket

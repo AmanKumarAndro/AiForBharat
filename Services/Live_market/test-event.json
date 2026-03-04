@@ -1,0 +1,8 @@
+{
+  "httpMethod": "POST",
+  "body": "{\"state\": \"West Bengal\", \"district\": \"Coochbehar\", \"action\": \"analyze\"}",
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "queryStringParameters": null
+}

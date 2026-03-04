@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commodity Market Analyzer - AI Powered</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌾 Commodity Market Analyzer</h1>
+            <p>AI-Powered Agricultural Market Insights using AWS Bedrock</p>
+        </header>
+
+        <div class="search-section">
+            <h2>Search Parameters</h2>
+            <form id="searchForm">
+                <div class="form-group">
+                    <label for="state">State</label>
+                    <input type="text" id="state" placeholder="e.g., West Bengal, Maharashtra">
+                </div>
+                
+                <div class="form-group">
+                    <label for="district">District</label>
+                    <input type="text" id="district" placeholder="e.g., Coochbehar">
+                </div>
+                
+                <div class="form-group">
+                    <label for="commodity">Commodity</label>
+                    <input type="text" id="commodity" placeholder="e.g., Pointed gourd (Parval)">
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-text">Analyze with AI</span>
+                        <span class="loader" style="display: none;"></span>
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="fetchDataBtn">View Raw Data</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="results" class="results-section" style="display: none;">
+            <h2>Analysis Results</h2>
+            <div id="metadata" class="metadata"></div>
+            <div id="analysis" class="analysis"></div>
+        </div>
+
+        <div id="rawData" class="raw-data-section" style="display: none;">
+            <h2>Raw Market Data</h2>
+            <div id="dataTable"></div>
+        </div>
+
+        <div id="error" class="error-section" style="display: none;"></div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

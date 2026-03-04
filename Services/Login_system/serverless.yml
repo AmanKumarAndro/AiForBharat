@@ -1,0 +1,70 @@
+service: kisanvoice-auth-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-south-1
+  stage: ${opt:stage, 'dev'}
+  environment:
+    DYNAMODB_TABLE: ${self:service}-${self:provider.stage}-farmers
+    JWT_SECRET: ${ssm:/kisanvoice/${self:provider.stage}/jwt-secret}
+    TWILIO_ACCOUNT_SID: ${ssm:/kisanvoice/${self:provider.stage}/twilio-account-sid}
+    TWILIO_AUTH_TOKEN: ${ssm:/kisanvoice/${self:provider.stage}/twilio-auth-token}
+    TWILIO_VERIFY_SERVICE_SID: ${ssm:/kisanvoice/${self:provider.stage}/twilio-verify-service-sid}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+            - dynamodb:Query
+          Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+
+functions:
+  sendOtp:
+    handler: src/handlers/auth.sendOtp
+    events:
+      - http:
+          path: auth/send-otp
+          method: post
+          cors: true
+
+  verifyOtp:
+    handler: src/handlers/auth.verifyOtp
+    events:
+      - http:
+          path: auth/verify-otp
+          method: post
+          cors: true
+
+  onboardFarmer:
+    handler: src/handlers/farmer.onboard
+    events:
+      - http:
+          path: farmer/onboard
+          method: post
+          cors: true
+
+  getProfile:
+    handler: src/handlers/farmer.getProfile
+    events:
+      - http:
+          path: farmer/profile
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    FarmersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: phone
+            AttributeType: S
+        KeySchema:
+          - AttributeName: phone
+            KeyType: HASH

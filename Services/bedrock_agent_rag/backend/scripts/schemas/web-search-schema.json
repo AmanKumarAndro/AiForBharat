@@ -1,0 +1,38 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Web Search Tool",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/web_search": {
+      "post": {
+        "summary": "Search web for live information",
+        "description": "Search for current information about government schemes (PM-KISAN), mandi prices, weather, scheme disbursement dates. Use for time-sensitive data.",
+        "operationId": "web_search",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Query to search on the web"
+                  }
+                },
+                "required": ["query"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Web search results"
+          }
+        }
+      }
+    }
+  }
+}

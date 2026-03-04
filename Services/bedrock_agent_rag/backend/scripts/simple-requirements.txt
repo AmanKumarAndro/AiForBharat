@@ -1,0 +1,8 @@
+# Minimal requirements for Simple Scraper (No API keys needed)
+
+# Web scraping
+requests==2.31.0
+beautifulsoup4==4.12.2
+lxml==4.9.3
+
+# That's it! Only 3 packages needed

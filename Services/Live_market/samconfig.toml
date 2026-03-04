@@ -1,0 +1,15 @@
+version = 0.1
+
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "commodity-analyzer"
+s3_prefix = "commodity-analyzer"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "ApiKey=\"579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b\" BedrockModelId=\"amazon.nova-micro-v1:0\""
+
+[default.build]
+[default.build.parameters]
+use_container = false

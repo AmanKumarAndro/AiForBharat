@@ -1,0 +1,21 @@
+{
+  "name": "kisanvoice-auth-api",
+  "version": "1.0.0",
+  "description": "KisanVoice Authentication and Farmer Onboarding API",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "deploy:dev": "serverless deploy --stage dev",
+    "deploy:prod": "serverless deploy --stage prod",
+    "local": "serverless offline"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1691.0",
+    "jsonwebtoken": "^9.0.2",
+    "twilio": "^5.3.4"
+  },
+  "devDependencies": {
+    "serverless": "^3.39.0",
+    "serverless-offline": "^13.8.1"
+  }
+}

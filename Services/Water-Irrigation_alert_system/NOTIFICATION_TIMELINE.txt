@@ -1,0 +1,205 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    KISANVOICE IRRIGATION - NOTIFICATION TIMELINE              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              DAILY TIMELINE                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+🌅 MORNING (7:00 AM)
+   ├─ Recovery Alert (if yesterday's rain didn't arrive)
+   │  └─ "Rain didn't arrive - irrigate today before 10 AM"
+   │
+   └─ Sunday: Weekly Summary (8:00 AM)
+      └─ "This week: saved 48,000L - ₹2,880"
+
+☀️ DAYTIME (9:00 AM - 5:00 PM)
+   └─ No automatic alerts
+      (Farmer is working in fields)
+
+🌤️ EVENING (5:45 PM) ⭐ MAIN ALERT TIME
+   ├─ Daily Intelligence Check
+   │  ├─ Fetch weather data (OpenWeatherMap)
+   │  ├─ Calculate soil moisture
+   │  ├─ Check crop stage
+   │  └─ Make decision
+   │
+   └─ Send SMS (if needed)
+      ├─ IRRIGATE: "Water your wheat tomorrow 6-8 AM"
+      ├─ SKIP: "Skip irrigation - rain expected (12mm)"
+      ├─ CRITICAL: "6 dry days - CRITICAL stage"
+      └─ REASSURANCE: "No irrigation needed this week"
+
+🌙 NIGHT (8:00 PM - 6:00 AM)
+   └─ No alerts
+      (Farmer is resting)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            WEEKLY PATTERN                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MONDAY
+├─ 5:45 PM: Check soil moisture
+└─ 📱 SMS: "Water your wheat tomorrow 6-8 AM"
+
+TUESDAY
+├─ 5:45 PM: Check soil moisture (good after irrigation)
+└─ ✓ No SMS needed
+
+WEDNESDAY
+├─ 5:45 PM: Check soil moisture + weather forecast
+└─ 📱 SMS: "Skip irrigation - rain expected (15mm)"
+
+THURSDAY
+├─ 7:00 AM: Check actual rainfall (only 2mm fell!)
+├─ 📱 SMS: "Rain didn't arrive - irrigate today"
+└─ 5:45 PM: Check soil moisture (good after irrigation)
+
+FRIDAY
+├─ 5:45 PM: Check soil moisture (still good)
+└─ ✓ No SMS needed
+
+SATURDAY
+├─ 5:45 PM: Check soil moisture (still good)
+└─ ✓ No SMS needed
+
+SUNDAY
+├─ 8:00 AM: Weekly summary calculation
+└─ 📱 SMS: "This week: saved 24,000L - ₹1,440"
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         CROP GROWTH TIMELINE                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+WHEAT (120 days)
+
+Day 0-21: Crown Root Stage
+├─ Alerts: 1-2 per week
+└─ Water need: Moderate
+
+Day 21-42: Tillering Stage ⚠️ CRITICAL
+├─ Alerts: 3-4 per week
+└─ Water need: High
+
+Day 42-63: Jointing Stage ⚠️ CRITICAL
+├─ Alerts: 4-5 per week
+└─ Water need: Very High
+
+Day 63-84: Heading Stage ⚠️ CRITICAL
+├─ Alerts: 4-5 per week
+└─ Water need: Maximum
+
+Day 84-105: Grain Filling
+├─ Alerts: 2-3 per week
+└─ Water need: Moderate
+
+Day 105-120: Maturity
+├─ Alerts: 0-1 per week
+└─ Water need: Low
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         MONSOON SEASON PATTERN                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+PRE-MONSOON (March-May)
+├─ Normal alert frequency
+├─ 3-5 SMS per week
+└─ Full irrigation needed
+
+ACTIVE MONSOON (June-September)
+├─ Reduced alert frequency
+├─ 1-2 SMS per week
+├─ Most alerts suppressed
+└─ Only critical alerts sent
+
+POST-MONSOON (October-February)
+├─ Normal alert frequency
+├─ 3-5 SMS per week
+└─ Full irrigation needed
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      NOTIFICATION FREQUENCY CHART                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+NORMAL WEEK:
+Mon Tue Wed Thu Fri Sat Sun
+ 📱  -   📱  📱  -   -   📱
+ ↓       ↓   ↓           ↓
+Irr    Skip Rec        Week
+                       Sum
+
+MONSOON WEEK:
+Mon Tue Wed Thu Fri Sat Sun
+ -   -   -   -   -   📱  📱
+                     ↓   ↓
+                   Crit Week
+                        Sum
+
+CRITICAL STAGE WEEK:
+Mon Tue Wed Thu Fri Sat Sun
+ 📱  📱  📱  📱  📱  -   📱
+ ↓   ↓   ↓   ↓   ↓       ↓
+Irr Irr Skip Rec Irr    Week
+                        Sum
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         INSTANT NOTIFICATIONS                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+REGISTRATION
+User registers → ⚡ Instant (< 60 seconds)
+└─ 📱 "Welcome to AquaAlert! Smart irrigation alerts active..."
+
+MANUAL TRIGGER
+User clicks "Check Now" → ⚡ Instant (< 10 seconds)
+└─ 📱 Current status + recommendation
+
+STOP/START
+User replies STOP → ⚡ Instant (< 5 seconds)
+└─ 📱 "You have been unsubscribed..."
+
+User replies START → ⚡ Instant (< 5 seconds)
+└─ 📱 "Welcome back! Irrigation alerts reactivated."
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            ALERT PRIORITIES                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+🔴 URGENT (7:00 AM)
+   └─ Recovery Alert
+      "Rain didn't arrive - irrigate NOW!"
+
+🟠 HIGH (5:45 PM)
+   ├─ Irrigate Alert
+   │  "Water your wheat tomorrow 6-8 AM"
+   └─ Critical Monsoon Alert
+      "6 dry days - CRITICAL stage"
+
+🟡 MEDIUM (5:45 PM)
+   └─ Skip Alert
+      "Skip irrigation - rain expected"
+
+🟢 LOW (5:45 PM / Sunday 8:00 AM)
+   ├─ Reassurance Alert
+   │  "No irrigation needed this week"
+   └─ Weekly Summary
+      "This week: saved 48,000L"
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              SUMMARY                                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+⏰ Main Alert Time: 5:45 PM IST (customizable)
+⏰ Recovery Time: 7:00 AM IST (fixed)
+⏰ Weekly Summary: Sunday 8:00 AM IST (fixed)
+
+📊 Average Frequency: 3-5 SMS per week
+📊 Maximum: 2 SMS per day
+📊 Minimum: 1 SMS per week (Sunday summary)
+
+✅ Smart: Only sends when action needed
+✅ Timely: Alerts before irrigation time
+✅ Accurate: Uses real-time weather data
+✅ Helpful: Includes water savings info
+
+═══════════════════════════════════════════════════════════════════════════════

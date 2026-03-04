@@ -1,0 +1,160 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Farmer Voice AI Tools - 4 Tools",
+    "version": "3.0.0",
+    "description": "Four tools for agricultural advisory: Knowledge Base, DynamoDB, Web Search, and YouTube Videos"
+  },
+  "paths": {
+    "/search_icar_knowledge_base": {
+      "post": {
+        "summary": "Search ICAR agricultural knowledge base",
+        "description": "Search for information about crops, pests, diseases, fertilizers, irrigation from verified ICAR/FSSAI/CIBRC PDF sources. Use for general agricultural knowledge and best practices.",
+        "operationId": "search_icar_knowledge_base",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "The farming question to search in ICAR knowledge base"
+                  }
+                },
+                "required": ["query"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Search results from ICAR knowledge base"
+          }
+        }
+      }
+    },
+    "/query_farmer_database": {
+      "post": {
+        "summary": "Query farmer database for regional data",
+        "description": "Use for farmer-specific records, regional crop data, past solutions, and historical data stored in local farmer database.",
+        "operationId": "query_farmer_database",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "keyword": {
+                    "type": "string",
+                    "description": "Keyword to search in crop and problem fields"
+                  },
+                  "query_type": {
+                    "type": "string",
+                    "description": "Type: crop, problem, solution, regional, or general"
+                  }
+                },
+                "required": ["keyword"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Matching farmer records"
+          }
+        }
+      }
+    },
+    "/web_search": {
+      "post": {
+        "summary": "Search web for live information",
+        "description": "Search for current information about government schemes (PM-KISAN), mandi prices, weather, scheme disbursement dates. Use for time-sensitive data.",
+        "operationId": "web_search",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Query to search on the web"
+                  }
+                },
+                "required": ["query"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Web search results"
+          }
+        }
+      }
+    },
+    "/search_youtube_videos": {
+      "post": {
+        "summary": "Search YouTube for farming tutorial videos",
+        "description": "Search YouTube for educational farming videos in Hindi. Use when farmer needs visual guidance, step-by-step tutorials, or wants to see practical demonstrations. Returns video titles, descriptions, thumbnails, and URLs.",
+        "operationId": "search_youtube_videos",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Search query for YouTube videos (e.g., 'wheat cultivation', 'pest control in rice')"
+                  },
+                  "max_results": {
+                    "type": "integer",
+                    "description": "Maximum number of videos to return (default: 5, max: 10)",
+                    "default": 5
+                  }
+                },
+                "required": ["query"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "YouTube video search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "query": {"type": "string"},
+                    "count": {"type": "integer"},
+                    "videos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "video_id": {"type": "string"},
+                          "title": {"type": "string"},
+                          "description": {"type": "string"},
+                          "thumbnail": {"type": "string"},
+                          "channel": {"type": "string"},
+                          "url": {"type": "string"}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

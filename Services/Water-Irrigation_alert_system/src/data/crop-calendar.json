@@ -1,0 +1,587 @@
+{
+  "wheat": {
+    "name": "Wheat",
+    "nameHindi": "गेहूं",
+    "season": "rabi",
+    "totalDuration": 120,
+    "sowingMonths": ["November", "December"],
+    "harvestMonths": ["March", "April"],
+    "stages": [
+      {
+        "id": 1,
+        "name": "Sowing & Germination",
+        "nameHindi": "बुवाई और अंकुरण",
+        "startDay": 0,
+        "endDay": 10,
+        "duration": 10,
+        "description": "Seed sowing and germination period. Seeds sprout and first shoots emerge.",
+        "descriptionHindi": "बीज बुवाई और अंकुरण। बीज अंकुरित होते हैं और पहली शूट निकलती है।",
+        "activities": [
+          "Land preparation and leveling",
+          "Seed treatment with fungicide",
+          "Sowing at 5-6 cm depth",
+          "Light irrigation after sowing"
+        ],
+        "activitiesHindi": [
+          "भूमि की तैयारी और समतलीकरण",
+          "फफूंदनाशक से बीज उपचार",
+          "5-6 सेमी गहराई पर बुवाई",
+          "बुवाई के बाद हल्की सिंचाई"
+        ],
+        "irrigation": "Light irrigation immediately after sowing",
+        "fertilizer": "Apply basal dose: 60 kg N, 30 kg P2O5, 20 kg K2O per hectare",
+        "temperature": "12-25°C optimal",
+        "icon": "🌱"
+      },
+      {
+        "id": 2,
+        "name": "Seedling & Tillering",
+        "nameHindi": "पौध और कल्ले फूटना",
+        "startDay": 11,
+        "endDay": 40,
+        "duration": 30,
+        "description": "Seedlings establish and tillers begin to form. Critical for plant population.",
+        "descriptionHindi": "पौधे स्थापित होते हैं और कल्ले बनने लगते हैं। पौधों की संख्या के लिए महत्वपूर्ण।",
+        "activities": [
+          "First irrigation at 20-25 days",
+          "Weed control",
+          "Monitor for pests",
+          "Top dressing of nitrogen"
+        ],
+        "activitiesHindi": [
+          "20-25 दिन पर पहली सिंचाई",
+          "खरपतवार नियंत्रण",
+          "कीटों की निगरानी",
+          "नाइट्रोजन की टॉप ड्रेसिंग"
+        ],
+        "irrigation": "First irrigation at 20-25 days (Crown Root Initiation stage)",
+        "fertilizer": "Apply 30 kg N per hectare at 21 days",
+        "temperature": "15-20°C optimal",
+        "icon": "🌿"
+      },
+      {
+        "id": 3,
+        "name": "Stem Elongation",
+        "nameHindi": "तना बढ़ना",
+        "startDay": 41,
+        "endDay": 60,
+        "duration": 20,
+        "description": "Rapid stem growth and node formation. Plant height increases significantly.",
+        "descriptionHindi": "तेजी से तने की वृद्धि और गांठें बनना। पौधे की ऊंचाई काफी बढ़ती है।",
+        "activities": [
+          "Second irrigation",
+          "Monitor for stem borer",
+          "Apply remaining nitrogen",
+          "Check for diseases"
+        ],
+        "activitiesHindi": [
+          "दूसरी सिंचाई",
+          "तना छेदक की निगरानी",
+          "शेष नाइट्रोजन डालें",
+          "रोगों की जांच करें"
+        ],
+        "irrigation": "Second irrigation at 40-45 days (Late Tillering stage)",
+        "fertilizer": "Apply remaining 30 kg N per hectare",
+        "temperature": "18-22°C optimal",
+        "icon": "🌾"
+      },
+      {
+        "id": 4,
+        "name": "Booting & Heading",
+        "nameHindi": "बूटिंग और बाली निकलना",
+        "startDay": 61,
+        "endDay": 75,
+        "duration": 15,
+        "description": "Ear emerges from leaf sheath. Critical stage for grain number determination.",
+        "descriptionHindi": "बाली पत्ती की म्यान से निकलती है। दाने की संख्या निर्धारण के लिए महत्वपूर्ण।",
+        "activities": [
+          "Third irrigation (critical)",
+          "Protect from birds",
+          "Monitor for aphids",
+          "Spray fungicide if needed"
+        ],
+        "activitiesHindi": [
+          "तीसरी सिंचाई (महत्वपूर्ण)",
+          "पक्षियों से बचाव",
+          "माहू की निगरानी",
+          "जरूरत पर फफूंदनाशक छिड़काव"
+        ],
+        "irrigation": "Third irrigation at 60 days (Jointing stage) - CRITICAL",
+        "fertilizer": "Foliar spray of micronutrients if deficiency observed",
+        "temperature": "20-25°C optimal",
+        "icon": "🌾"
+      },
+      {
+        "id": 5,
+        "name": "Flowering & Pollination",
+        "nameHindi": "फूल आना और परागण",
+        "startDay": 76,
+        "endDay": 85,
+        "duration": 10,
+        "description": "Flowering occurs and pollination takes place. Determines grain set.",
+        "descriptionHindi": "फूल आते हैं और परागण होता है। दाने बनने का निर्धारण।",
+        "activities": [
+          "Fourth irrigation",
+          "Avoid stress conditions",
+          "Monitor weather",
+          "Protect from high temperature"
+        ],
+        "activitiesHindi": [
+          "चौथी सिंचाई",
+          "तनाव की स्थिति से बचें",
+          "मौसम की निगरानी",
+          "उच्च तापमान से बचाव"
+        ],
+        "irrigation": "Fourth irrigation at 75-80 days (Flowering stage) - CRITICAL",
+        "fertilizer": "No fertilizer application",
+        "temperature": "20-25°C optimal, avoid >30°C",
+        "icon": "🌸"
+      },
+      {
+        "id": 6,
+        "name": "Grain Filling",
+        "nameHindi": "दाना भरना",
+        "startDay": 86,
+        "endDay": 105,
+        "duration": 20,
+        "description": "Grains fill with starch and protein. Critical for final grain weight.",
+        "descriptionHindi": "दानों में स्टार्च और प्रोटीन भरता है। अंतिम दाने के वजन के लिए महत्वपूर्ण।",
+        "activities": [
+          "Fifth irrigation",
+          "Monitor grain development",
+          "Protect from diseases",
+          "Watch for lodging"
+        ],
+        "activitiesHindi": [
+          "पांचवीं सिंचाई",
+          "दाने के विकास की निगरानी",
+          "रोगों से बचाव",
+          "गिरने से बचाव"
+        ],
+        "irrigation": "Fifth irrigation at 90-95 days (Milk stage)",
+        "fertilizer": "No fertilizer application",
+        "temperature": "20-25°C optimal",
+        "icon": "🌾"
+      },
+      {
+        "id": 7,
+        "name": "Maturity & Harvest",
+        "nameHindi": "पकना और कटाई",
+        "startDay": 106,
+        "endDay": 120,
+        "duration": 15,
+        "description": "Grains mature and dry. Ready for harvest when moisture content is 20-25%.",
+        "descriptionHindi": "दाने पक जाते हैं और सूख जाते हैं। 20-25% नमी पर कटाई के लिए तैयार।",
+        "activities": [
+          "Stop irrigation 10 days before harvest",
+          "Monitor grain moisture",
+          "Arrange harvesting equipment",
+          "Harvest at right time"
+        ],
+        "activitiesHindi": [
+          "कटाई से 10 दिन पहले सिंचाई बंद करें",
+          "दाने की नमी की जांच करें",
+          "कटाई उपकरण की व्यवस्था करें",
+          "सही समय पर कटाई करें"
+        ],
+        "irrigation": "Stop irrigation 10-12 days before harvest",
+        "fertilizer": "No fertilizer application",
+        "temperature": "15-20°C optimal for maturity",
+        "icon": "🌾"
+      }
+    ],
+    "totalIrrigations": 5,
+    "yieldPerHectare": "40-50 quintals",
+    "waterRequirement": "450-650 mm"
+  },
+  "rice": {
+    "name": "Rice",
+    "nameHindi": "धान",
+    "season": "kharif",
+    "totalDuration": 120,
+    "sowingMonths": ["June", "July"],
+    "harvestMonths": ["October", "November"],
+    "stages": [
+      {
+        "id": 1,
+        "name": "Nursery & Transplanting",
+        "nameHindi": "नर्सरी और रोपाई",
+        "startDay": 0,
+        "endDay": 25,
+        "duration": 25,
+        "description": "Seeds sown in nursery, seedlings grow for 20-25 days before transplanting.",
+        "descriptionHindi": "नर्सरी में बीज बोए जाते हैं, रोपाई से पहले 20-25 दिन पौधे बढ़ते हैं।",
+        "activities": [
+          "Prepare nursery bed",
+          "Sow pre-germinated seeds",
+          "Maintain 2-3 cm water in nursery",
+          "Transplant 20-25 day old seedlings"
+        ],
+        "activitiesHindi": [
+          "नर्सरी बेड तैयार करें",
+          "अंकुरित बीज बोएं",
+          "नर्सरी में 2-3 सेमी पानी रखें",
+          "20-25 दिन पुराने पौधे रोपें"
+        ],
+        "irrigation": "Keep 2-3 cm standing water continuously",
+        "fertilizer": "Apply 60 kg N, 30 kg P2O5, 30 kg K2O per hectare at transplanting",
+        "temperature": "25-35°C optimal",
+        "icon": "🌱"
+      },
+      {
+        "id": 2,
+        "name": "Tillering",
+        "nameHindi": "कल्ले फूटना",
+        "startDay": 26,
+        "endDay": 55,
+        "duration": 30,
+        "description": "Plants produce tillers (side shoots). Critical for determining number of panicles.",
+        "descriptionHindi": "पौधे कल्ले (साइड शूट) पैदा करते हैं। बालियों की संख्या निर्धारण के लिए महत्वपूर्ण।",
+        "activities": [
+          "Maintain 5 cm water level",
+          "First top dressing of nitrogen",
+          "Weed control",
+          "Monitor for stem borer"
+        ],
+        "activitiesHindi": [
+          "5 सेमी पानी का स्तर बनाए रखें",
+          "नाइट्रोजन की पहली टॉप ड्रेसिंग",
+          "खरपतवार नियंत्रण",
+          "तना छेदक की निगरानी"
+        ],
+        "irrigation": "Maintain 5 cm standing water",
+        "fertilizer": "Apply 30 kg N per hectare at 25-30 days",
+        "temperature": "25-30°C optimal",
+        "icon": "🌿"
+      },
+      {
+        "id": 3,
+        "name": "Stem Elongation",
+        "nameHindi": "तना बढ़ना",
+        "startDay": 56,
+        "endDay": 75,
+        "duration": 20,
+        "description": "Rapid stem growth and panicle initiation inside stem.",
+        "descriptionHindi": "तेजी से तने की वृद्धि और तने के अंदर बाली की शुरुआत।",
+        "activities": [
+          "Second top dressing",
+          "Maintain water level",
+          "Monitor for leaf folder",
+          "Check for blast disease"
+        ],
+        "activitiesHindi": [
+          "दूसरी टॉप ड्रेसिंग",
+          "पानी का स्तर बनाए रखें",
+          "पत्ती मोड़क की निगरानी",
+          "ब्लास्ट रोग की जांच"
+        ],
+        "irrigation": "Maintain 5-7 cm standing water",
+        "fertilizer": "Apply 30 kg N per hectare at 55-60 days",
+        "temperature": "25-30°C optimal",
+        "icon": "🌾"
+      },
+      {
+        "id": 4,
+        "name": "Panicle Emergence",
+        "nameHindi": "बाली निकलना",
+        "startDay": 76,
+        "endDay": 85,
+        "duration": 10,
+        "description": "Panicles emerge from leaf sheath. Critical water requirement stage.",
+        "descriptionHindi": "बाली पत्ती की म्यान से निकलती है। पानी की महत्वपूर्ण आवश्यकता का चरण।",
+        "activities": [
+          "Ensure adequate water",
+          "Protect from birds",
+          "Monitor for pests",
+          "Spray insecticide if needed"
+        ],
+        "activitiesHindi": [
+          "पर्याप्त पानी सुनिश्चित करें",
+          "पक्षियों से बचाव",
+          "कीटों की निगरानी",
+          "जरूरत पर कीटनाशक छिड़काव"
+        ],
+        "irrigation": "Maintain 7-10 cm standing water - CRITICAL",
+        "fertilizer": "No fertilizer application",
+        "temperature": "25-30°C optimal",
+        "icon": "🌾"
+      },
+      {
+        "id": 5,
+        "name": "Flowering",
+        "nameHindi": "फूल आना",
+        "startDay": 86,
+        "endDay": 95,
+        "duration": 10,
+        "description": "Flowering and pollination occur. Determines grain number per panicle.",
+        "descriptionHindi": "फूल आना और परागण होता है। प्रति बाली दानों की संख्या निर्धारित होती है।",
+        "activities": [
+          "Maintain water level",
+          "Avoid water stress",
+          "Monitor temperature",
+          "Protect from high winds"
+        ],
+        "activitiesHindi": [
+          "पानी का स्तर बनाए रखें",
+          "पानी की कमी से बचें",
+          "तापमान की निगरानी",
+          "तेज हवा से बचाव"
+        ],
+        "irrigation": "Maintain 5-7 cm standing water - CRITICAL",
+        "fertilizer": "No fertilizer application",
+        "temperature": "25-30°C optimal, avoid >35°C",
+        "icon": "🌸"
+      },
+      {
+        "id": 6,
+        "name": "Grain Filling",
+        "nameHindi": "दाना भरना",
+        "startDay": 96,
+        "endDay": 110,
+        "duration": 15,
+        "description": "Grains fill with starch. Critical for grain weight and quality.",
+        "descriptionHindi": "दानों में स्टार्च भरता है। दाने के वजन और गुणवत्ता के लिए महत्वपूर्ण।",
+        "activities": [
+          "Maintain water level",
+          "Monitor grain development",
+          "Watch for diseases",
+          "Protect from rats and birds"
+        ],
+        "activitiesHindi": [
+          "पानी का स्तर बनाए रखें",
+          "दाने के विकास की निगरानी",
+          "रोगों की निगरानी",
+          "चूहों और पक्षियों से बचाव"
+        ],
+        "irrigation": "Maintain 3-5 cm standing water",
+        "fertilizer": "No fertilizer application",
+        "temperature": "25-30°C optimal",
+        "icon": "🌾"
+      },
+      {
+        "id": 7,
+        "name": "Maturity & Harvest",
+        "nameHindi": "पकना और कटाई",
+        "startDay": 111,
+        "endDay": 120,
+        "duration": 10,
+        "description": "Grains mature and turn golden. Harvest when 80% grains are straw colored.",
+        "descriptionHindi": "दाने पक जाते हैं और सुनहरे हो जाते हैं। 80% दाने पुआल रंग के होने पर कटाई करें।",
+        "activities": [
+          "Drain field 7-10 days before harvest",
+          "Monitor grain moisture (20-22%)",
+          "Arrange harvesting equipment",
+          "Harvest at right maturity"
+        ],
+        "activitiesHindi": [
+          "कटाई से 7-10 दिन पहले खेत सुखाएं",
+          "दाने की नमी जांचें (20-22%)",
+          "कटाई उपकरण की व्यवस्था",
+          "सही परिपक्वता पर कटाई"
+        ],
+        "irrigation": "Drain field 7-10 days before harvest",
+        "fertilizer": "No fertilizer application",
+        "temperature": "25-30°C optimal",
+        "icon": "🌾"
+      }
+    ],
+    "totalIrrigations": "Continuous flooding",
+    "yieldPerHectare": "50-60 quintals",
+    "waterRequirement": "1200-1500 mm"
+  },
+  "cotton": {
+    "name": "Cotton",
+    "nameHindi": "कपास",
+    "season": "kharif",
+    "totalDuration": 180,
+    "sowingMonths": ["April", "May"],
+    "harvestMonths": ["October", "November", "December"],
+    "stages": [
+      {
+        "id": 1,
+        "name": "Germination & Emergence",
+        "nameHindi": "अंकुरण और उभरना",
+        "startDay": 0,
+        "endDay": 14,
+        "duration": 14,
+        "description": "Seeds germinate and seedlings emerge from soil.",
+        "descriptionHindi": "बीज अंकुरित होते हैं और पौधे मिट्टी से बाहर आते हैं।",
+        "activities": [
+          "Seed treatment with fungicide",
+          "Sowing at 5 cm depth",
+          "Light irrigation after sowing",
+          "Monitor for seedling diseases"
+        ],
+        "activitiesHindi": [
+          "फफूंदनाशक से बीज उपचार",
+          "5 सेमी गहराई पर बुवाई",
+          "बुवाई के बाद हल्की सिंचाई",
+          "पौध रोगों की निगरानी"
+        ],
+        "irrigation": "Light irrigation immediately after sowing",
+        "fertilizer": "Apply 60 kg N, 30 kg P2O5, 30 kg K2O per hectare",
+        "temperature": "25-35°C optimal",
+        "icon": "🌱"
+      },
+      {
+        "id": 2,
+        "name": "Seedling Stage",
+        "nameHindi": "पौध अवस्था",
+        "startDay": 15,
+        "endDay": 40,
+        "duration": 26,
+        "description": "Seedlings establish root system and develop first true leaves.",
+        "descriptionHindi": "पौधे जड़ प्रणाली स्थापित करते हैं और पहली सच्ची पत्तियां विकसित करते हैं।",
+        "activities": [
+          "First irrigation at 20-25 days",
+          "Thinning if needed",
+          "Weed control",
+          "Monitor for sucking pests"
+        ],
+        "activitiesHindi": [
+          "20-25 दिन पर पहली सिंचाई",
+          "जरूरत पर पौधे छांटें",
+          "खरपतवार नियंत्रण",
+          "चूसने वाले कीटों की निगरानी"
+        ],
+        "irrigation": "First irrigation at 20-25 days",
+        "fertilizer": "No fertilizer application",
+        "temperature": "25-35°C optimal",
+        "icon": "🌿"
+      },
+      {
+        "id": 3,
+        "name": "Vegetative Growth",
+        "nameHindi": "वानस्पतिक वृद्धि",
+        "startDay": 41,
+        "endDay": 80,
+        "duration": 40,
+        "description": "Rapid vegetative growth, branching, and canopy development.",
+        "descriptionHindi": "तेजी से वानस्पतिक वृद्धि, शाखाएं और छतरी का विकास।",
+        "activities": [
+          "Regular irrigation every 12-15 days",
+          "Top dressing of nitrogen",
+          "Monitor for bollworm",
+          "Spray insecticide if needed"
+        ],
+        "activitiesHindi": [
+          "हर 12-15 दिन में नियमित सिंचाई",
+          "नाइट्रोजन की टॉप ड्रेसिंग",
+          "बॉलवर्म की निगरानी",
+          "जरूरत पर कीटनाशक छिड़काव"
+        ],
+        "irrigation": "Irrigation every 12-15 days",
+        "fertilizer": "Apply 30 kg N per hectare at 40-45 days",
+        "temperature": "25-35°C optimal",
+        "icon": "🌿"
+      },
+      {
+        "id": 4,
+        "name": "Square Formation",
+        "nameHindi": "स्क्वायर बनना",
+        "startDay": 81,
+        "endDay": 100,
+        "duration": 20,
+        "description": "Flower buds (squares) form. Critical stage for boll number.",
+        "descriptionHindi": "फूल की कलियां (स्क्वायर) बनती हैं। बोल संख्या के लिए महत्वपूर्ण चरण।",
+        "activities": [
+          "Maintain adequate moisture",
+          "Monitor for boll weevil",
+          "Protect squares from shedding",
+          "Apply micronutrients if needed"
+        ],
+        "activitiesHindi": [
+          "पर्याप्त नमी बनाए रखें",
+          "बोल वीविल की निगरानी",
+          "स्क्वायर गिरने से बचाएं",
+          "जरूरत पर सूक्ष्म पोषक तत्व डालें"
+        ],
+        "irrigation": "Irrigation every 10-12 days - CRITICAL",
+        "fertilizer": "Apply remaining 30 kg N per hectare",
+        "temperature": "25-30°C optimal",
+        "icon": "🌸"
+      },
+      {
+        "id": 5,
+        "name": "Flowering & Boll Formation",
+        "nameHindi": "फूल आना और बोल बनना",
+        "startDay": 101,
+        "endDay": 140,
+        "duration": 40,
+        "description": "Flowers open and bolls form after pollination. Peak flowering period.",
+        "descriptionHindi": "फूल खिलते हैं और परागण के बाद बोल बनते हैं। चरम फूल अवधि।",
+        "activities": [
+          "Regular irrigation",
+          "Monitor for pink bollworm",
+          "Protect from boll shedding",
+          "Spray for pest control"
+        ],
+        "activitiesHindi": [
+          "नियमित सिंचाई",
+          "गुलाबी बॉलवर्म की निगरानी",
+          "बोल गिरने से बचाएं",
+          "कीट नियंत्रण के लिए छिड़काव"
+        ],
+        "irrigation": "Irrigation every 10-12 days - CRITICAL",
+        "fertilizer": "Foliar spray of potassium if needed",
+        "temperature": "25-30°C optimal",
+        "icon": "🌸"
+      },
+      {
+        "id": 6,
+        "name": "Boll Development",
+        "nameHindi": "बोल विकास",
+        "startDay": 141,
+        "endDay": 165,
+        "duration": 25,
+        "description": "Bolls grow and fibers develop inside. Critical for fiber quality.",
+        "descriptionHindi": "बोल बढ़ते हैं और अंदर रेशे विकसित होते हैं। रेशे की गुणवत्ता के लिए महत्वपूर्ण।",
+        "activities": [
+          "Continue irrigation",
+          "Monitor boll development",
+          "Protect from diseases",
+          "Watch for boll rot"
+        ],
+        "activitiesHindi": [
+          "सिंचाई जारी रखें",
+          "बोल विकास की निगरानी",
+          "रोगों से बचाव",
+          "बोल सड़न की निगरानी"
+        ],
+        "irrigation": "Irrigation every 12-15 days",
+        "fertilizer": "No fertilizer application",
+        "temperature": "25-30°C optimal",
+        "icon": "🌾"
+      },
+      {
+        "id": 7,
+        "name": "Boll Opening & Harvest",
+        "nameHindi": "बोल खुलना और कटाई",
+        "startDay": 166,
+        "endDay": 180,
+        "duration": 15,
+        "description": "Bolls open and cotton is ready for picking. Multiple pickings required.",
+        "descriptionHindi": "बोल खुलते हैं और कपास तुड़ाई के लिए तैयार है। कई बार तुड़ाई की जरूरत।",
+        "activities": [
+          "Stop irrigation 15 days before first picking",
+          "Monitor boll opening",
+          "Pick cotton at right maturity",
+          "Multiple pickings at 15-day intervals"
+        ],
+        "activitiesHindi": [
+          "पहली तुड़ाई से 15 दिन पहले सिंचाई बंद करें",
+          "बोल खुलने की निगरानी",
+          "सही परिपक्वता पर कपास तोड़ें",
+          "15 दिन के अंतराल पर कई बार तुड़ाई"
+        ],
+        "irrigation": "Stop irrigation 15 days before first picking",
+        "fertilizer": "No fertilizer application",
+        "temperature": "25-30°C optimal",
+        "icon": "☁️"
+      }
+    ],
+    "totalIrrigations": 12,
+    "yieldPerHectare": "25-30 quintals",
+    "waterRequirement": "700-1300 mm"
+  }
+}

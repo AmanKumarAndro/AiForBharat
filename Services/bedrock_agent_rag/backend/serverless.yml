@@ -1,0 +1,163 @@
+service: farmer-voice-ai
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1  # Changed to us-east-1 for Claude 3 Haiku support
+  stage: ${opt:stage, 'dev'}
+  environment:
+    DYNAMODB_TABLE: ${self:service}-${self:provider.stage}-sessions
+    KNOWLEDGE_BASE_ID: ${env:KNOWLEDGE_BASE_ID, ''}
+    AGENT_ID: ${env:AGENT_ID, ''}
+    AGENT_ALIAS_ID: ${env:AGENT_ALIAS_ID, ''}
+    S3_BUCKET: ${self:service}-${self:provider.stage}-${self:provider.region}-documents
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - transcribe:StartStreamTranscription
+            - transcribe:StartTranscriptionJob
+            - transcribe:GetTranscriptionJob
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - polly:SynthesizeSpeech
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - bedrock:InvokeModel
+            - bedrock:Retrieve
+            - bedrock:InvokeAgent
+            - bedrock:ListFoundationModels
+            - bedrock-agent-runtime:InvokeAgent
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - aws-marketplace:ViewSubscriptions
+            - aws-marketplace:Subscribe
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - s3:GetObject
+            - s3:PutObject
+          Resource: 'arn:aws:s3:::${self:service}-${self:provider.stage}-${self:provider.region}-audio/*'
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+            - dynamodb:Query
+            - dynamodb:Scan
+          Resource: 
+            - 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}'
+
+functions:
+  transcribe:
+    handler: src/handlers/transcribe.handler
+    timeout: 30
+    events:
+      - http:
+          path: /transcribe
+          method: post
+          cors: true
+
+  query:
+    handler: src/handlers/query.handler
+    timeout: 30
+    events:
+      - http:
+          path: /query
+          method: post
+          cors: true
+
+  synthesize:
+    handler: src/handlers/synthesize.handler
+    timeout: 30
+    events:
+      - http:
+          path: /synthesize
+          method: post
+          cors: true
+
+  voiceQuery:
+    handler: src/handlers/voiceQuery.handler
+    timeout: 30
+    events:
+      - http:
+          path: /voice-query
+          method: post
+          cors: true
+
+  agentQuery:
+    handler: src/handlers/agentQuery.handler
+    timeout: 60
+    environment:
+      AGENT_ID: WXNUIKEH7R
+      AGENT_ALIAS_ID: KSNVLZJ1KA
+    events:
+      - http:
+          path: /agent-query
+          method: post
+          cors: true
+
+  dynamoToolLambda:
+    handler: src/handlers/dynamoToolLambda.handler
+    timeout: 30
+    environment:
+      DYNAMO_TABLE_NAME: ${self:provider.environment.DYNAMODB_TABLE}
+
+  youtubeToolLambda:
+    handler: src/handlers/youtubeToolLambda.handler
+    timeout: 30
+    environment:
+      YOUTUBE_API_KEY: ${env:YOUTUBE_API_KEY, ''}
+
+  getHistory:
+    handler: src/handlers/getHistory.handler
+    timeout: 10
+    events:
+      - http:
+          path: /history
+          method: post
+          cors: true
+
+resources:
+  Resources:
+    SessionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: sessionId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: sessionId
+            KeyType: HASH
+        TimeToLiveSpecification:
+          AttributeName: ttl
+          Enabled: true
+
+    DocumentsBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:provider.environment.S3_BUCKET}
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
+
+    AudioBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:service}-${self:provider.stage}-${self:provider.region}-audio
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
+
+plugins:
+  - serverless-offline

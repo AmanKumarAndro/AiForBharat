@@ -1,0 +1,42 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Farmer Database Tool",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/query_farmer_database": {
+      "post": {
+        "summary": "Query farmer database for regional data",
+        "description": "Use for farmer-specific records, regional crop data, past solutions, and historical data stored in local farmer database.",
+        "operationId": "query_farmer_database",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "keyword": {
+                    "type": "string",
+                    "description": "Keyword to search in crop and problem fields"
+                  },
+                  "query_type": {
+                    "type": "string",
+                    "description": "Type: crop, problem, solution, regional, or general"
+                  }
+                },
+                "required": ["keyword"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Matching farmer records"
+          }
+        }
+      }
+    }
+  }
+}

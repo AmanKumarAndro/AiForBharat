@@ -1,0 +1,282 @@
+service: kisanvoice-irrigation
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-south-1
+  stage: ${opt:stage, 'dev'}
+  environment:
+    FARMERS_TABLE: ${self:service}-${self:provider.stage}-farmers
+    SOIL_STATE_TABLE: ${self:service}-${self:provider.stage}-soil-state
+    SMS_LOG_TABLE: ${self:service}-${self:provider.stage}-sms-log
+    SAVINGS_TABLE: ${self:service}-${self:provider.stage}-savings
+    MONSOON_TABLE: ${self:service}-${self:provider.stage}-monsoon-calendar
+    CROP_DATA_TABLE: ${self:service}-${self:provider.stage}-crop-data
+    OPENWEATHER_BASE_URL: https://api.openweathermap.org/data/2.5
+    AWS_ACCOUNT_ID: ${aws:accountId}
+    DAILY_INTELLIGENCE_LAMBDA_ARN: arn:aws:lambda:${self:provider.region}:${aws:accountId}:function:${self:service}-${self:provider.stage}-daily-intelligence
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:DeleteItem
+          Resource:
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FARMERS_TABLE}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.SOIL_STATE_TABLE}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.SMS_LOG_TABLE}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.SAVINGS_TABLE}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.MONSOON_TABLE}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CROP_DATA_TABLE}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.FARMERS_TABLE}/index/*
+        - Effect: Allow
+          Action:
+            - secretsmanager:GetSecretValue
+          Resource: arn:aws:secretsmanager:${self:provider.region}:*:secret:kisanvoice/prod-*
+        - Effect: Allow
+          Action:
+            - events:PutRule
+            - events:PutTargets
+            - events:DisableRule
+            - events:EnableRule
+            - events:RemoveTargets
+            - events:DeleteRule
+          Resource: arn:aws:events:${self:provider.region}:*:rule/irrigation-*
+        - Effect: Allow
+          Action:
+            - sqs:SendMessage
+            - sqs:ReceiveMessage
+            - sqs:DeleteMessage
+          Resource: !GetAtt AlertDLQ.Arn
+
+functions:
+  register-farmer-irrigation:
+    handler: src/handlers/register-farmer-irrigation.handler
+    timeout: 30
+    events:
+      - http:
+          path: /irrigation/register
+          method: post
+          cors: true
+
+  daily-intelligence:
+    handler: src/handlers/daily-intelligence.handler
+    timeout: 15
+    memorySize: 256
+    onError: !GetAtt AlertDLQ.Arn
+
+  twilio-webhook:
+    handler: src/handlers/twilio-webhook.handler
+    timeout: 10
+    events:
+      - http:
+          path: /twilio/inbound
+          method: post
+
+  twilio-status:
+    handler: src/handlers/twilio-status.handler
+    timeout: 10
+    events:
+      - http:
+          path: /twilio/status
+          method: post
+
+  retry-alert:
+    handler: src/handlers/retry-alert.handler
+    timeout: 30
+    events:
+      - sqs:
+          arn: !GetAtt AlertDLQ.Arn
+          batchSize: 10
+
+  weekly-summary:
+    handler: src/handlers/weekly-summary.handler
+    timeout: 300
+    events:
+      - schedule:
+          rate: cron(30 2 ? * SUN *)
+          description: Send weekly savings summary every Sunday at 08:00 IST
+
+  get-alerts-by-phone:
+    handler: src/handlers/get-alerts-by-phone.handler
+    timeout: 10
+    events:
+      - http:
+          path: /irrigation/alerts/phone/{phone}
+          method: get
+          cors: true
+
+  delete-alert:
+    handler: src/handlers/delete-alert.handler
+    timeout: 10
+    events:
+      - http:
+          path: /irrigation/alerts/delete/{farmerId}/{alertId}
+          method: delete
+          cors: true
+
+  unregister-farmer:
+    handler: src/handlers/unregister-farmer.handler
+    timeout: 30
+    events:
+      - http:
+          path: /irrigation/unregister/{farmerId}
+          method: delete
+          cors: true
+
+  weather-alert-check:
+    handler: src/handlers/weather-alert-check.handler
+    timeout: 300
+    memorySize: 512
+    events:
+      - schedule:
+          rate: cron(0 */3 * * ? *)
+          description: Check for critical weather conditions every 3 hours
+
+  get-crop-calendar:
+    handler: src/handlers/get-crop-calendar.handler
+    timeout: 10
+    events:
+      - http:
+          path: /irrigation/crop-calendar/{crop}
+          method: get
+          cors: true
+      - http:
+          path: /irrigation/crop-calendar
+          method: get
+          cors: true
+
+  get-dashboard:
+    handler: src/handlers/get-dashboard.handler
+    timeout: 15
+    events:
+      - http:
+          path: /irrigation/dashboard/{farmerId}
+          method: get
+          cors: true
+
+resources:
+  Resources:
+    FarmersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.FARMERS_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+          - AttributeName: phone
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+        GlobalSecondaryIndexes:
+          - IndexName: phone-index
+            KeySchema:
+              - AttributeName: phone
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+    SoilStateTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.SOIL_STATE_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+
+    SmsLogTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.SMS_LOG_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+
+    SavingsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.SAVINGS_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+
+    MonsoonCalendarTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.MONSOON_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+
+    CropDataTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.CROP_DATA_TABLE}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: pk
+            AttributeType: S
+          - AttributeName: sk
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pk
+            KeyType: HASH
+          - AttributeName: sk
+            KeyType: RANGE
+
+    AlertDLQ:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: ${self:service}-${self:provider.stage}-alert-dlq
+        MessageRetentionPeriod: 1209600
+        VisibilityTimeout: 300
+
+package:
+  patterns:
+    - '!.git/**'
+    - '!tests/**'
+    - '!*.md'
+    - '!.env*'

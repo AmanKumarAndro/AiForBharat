@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helping Hand - Farm Services</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #2e7d32; color: white; padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
+        .header h1 { font-size: 24px; margin-bottom: 5px; }
+        .header p { opacity: 0.9; font-size: 14px; }
+        .card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .service-btn { width: 100%; padding: 20px; margin: 10px 0; border: none; border-radius: 8px; font-size: 18px; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
+        .service-btn:active { transform: scale(0.98); }
+        .tractor { background: #4caf50; color: white; }
+        .labour { background: #ff9800; color: white; }
+        .transport { background: #2196f3; color: white; }
+        .status { padding: 15px; background: #e3f2fd; border-radius: 8px; margin-top: 15px; }
+        .provider-card { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-top: 10px; }
+        .rating { color: #ff9800; font-size: 20px; }
+        .call-btn { background: #4caf50; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        .hidden { display: none; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
+        label { display: block; margin-top: 10px; font-weight: 600; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚜 Helping Hand</h1>
+            <p>Tractor | Labour | Transport</p>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-bottom: 15px;">Request Service</h2>
+            
+            <label>Your Name</label>
+            <input type="text" id="farmerName" placeholder="Enter your name" value="Rajesh Sharma">
+            
+            <label>Phone Number</label>
+            <input type="tel" id="farmerPhone" placeholder="+919876543210" value="+919999999999">
+            
+            <label>Your Pincode</label>
+            <input type="text" id="farmerPincode" placeholder="411001" value="411001">
+            
+            <div style="margin-top: 20px;">
+                <button class="service-btn tractor" onclick="requestService('TRACTOR')">🚜 Need Tractor</button>
+                <button class="service-btn labour" onclick="requestService('LABOUR')">👷 Need Labour</button>
+                <button class="service-btn transport" onclick="requestService('TRANSPORT')">🚚 Need Transport</button>
+            </div>
+        </div>
+
+        <div id="statusCard" class="card hidden">
+            <h3>Request Status</h3>
+            <div id="statusContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'YOUR_API_GATEWAY_URL';
+        let currentRequestId = null;
+        let statusInterval = null;
+
+        async function requestService(serviceType) {
+            const name = document.getElementById('farmerName').value;
+            const phone = document.getElementById('farmerPhone').value;
+            const pincode = document.getElementById('farmerPincode').value;
+
+            if (!name || !phone || !pincode) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/request`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        farmer_id: phone,
+                        farmer_name: name,
+                        service_type: serviceType,
+                        farmer_pincode: pincode,
+                        estimated_price: 500
+                    })
+                });
+
+                const data = await response.json();
+                currentRequestId = data.request_id;
+                
+                document.getElementById('statusCard').classList.remove('hidden');
+                document.getElementById('statusContent').innerHTML = `
+                    <div class="status">
+                        <p><strong>Request ID:</strong> ${data.request_id}</p>
+                        <p><strong>Status:</strong> Finding providers...</p>
+                        <p style="margin-top: 10px;">⏳ Please wait while we match you with the best provider</p>
+                    </div>
+                `;
+
+                // Poll for status updates
+                if (statusInterval) clearInterval(statusInterval);
+                statusInterval = setInterval(checkStatus, 2000);
+                
+            } catch (error) {
+                alert('Error creating request: ' + error.message);
+            }
+        }
+
+        async function checkStatus() {
+            if (!currentRequestId) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/status/${currentRequestId}`);
+                const data = await response.json();
+
+                let html = `
+                    <div class="status">
+                        <p><strong>Request ID:</strong> ${data.request_id}</p>
+                        <p><strong>Status:</strong> ${data.status}</p>
+                `;
+
+                if (data.status === 'MATCHED' && data.provider) {
+                    clearInterval(statusInterval);
+                    html += `
+                        <div class="provider-card">
+                            <h4>✅ Provider Matched!</h4>
+                            <p><strong>Name:</strong> ${data.provider.name}</p>
+                            <p><strong>Rating:</strong> <span class="rating">${'⭐'.repeat(Math.round(data.provider.rating))}</span> ${data.provider.rating}</p>
+                            <p><strong>Price:</strong> ₹${data.provider.price_per_hour}/hour</p>
+                            <button class="call-btn" onclick="window.location.href='tel:${data.provider.phone}'">📞 Call ${data.provider.name}</button>
+                            <button class="call-btn" style="background: #ff9800; margin-left: 10px;" onclick="rateProvider()">⭐ Complete & Rate</button>
+                        </div>
+                    `;
+                } else if (data.status === 'NO_PROVIDERS_FOUND') {
+                    clearInterval(statusInterval);
+                    html += '<p style="color: #f44336; margin-top: 10px;">❌ No providers available in your area</p>';
+                } else if (data.status === 'NOTIFYING') {
+                    html += '<p style="margin-top: 10px;">📢 Notifying nearby providers...</p>';
+                }
+
+                html += '</div>';
+                document.getElementById('statusContent').innerHTML = html;
+
+            } catch (error) {
+                console.error('Error checking status:', error);
+            }
+        }
+
+        async function rateProvider() {
+            const rating = prompt('Rate the service (1-5 stars):');
+            if (!rating || rating < 1 || rating > 5) {
+                alert('Please enter a rating between 1 and 5');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/complete`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        request_id: currentRequestId,
+                        rating: parseInt(rating)
+                    })
+                });
+
+                const data = await response.json();
+                alert(`✅ Thank you! Provider's new rating: ${data.provider_new_rating}`);
+                location.reload();
+                
+            } catch (error) {
+                alert('Error submitting rating: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

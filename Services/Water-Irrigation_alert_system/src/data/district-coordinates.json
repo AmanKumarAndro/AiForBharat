@@ -1,0 +1,14 @@
+{
+  "Karnal": { "lat": 29.6857, "lon": 76.9905 },
+  "Ludhiana": { "lat": 30.9010, "lon": 75.8573 },
+  "Amritsar": { "lat": 31.6340, "lon": 74.8723 },
+  "Meerut": { "lat": 28.9845, "lon": 77.7064 },
+  "Varanasi": { "lat": 25.3176, "lon": 82.9739 },
+  "Nagpur": { "lat": 21.1458, "lon": 79.0882 },
+  "Pune": { "lat": 18.5204, "lon": 73.8567 },
+  "Guntur": { "lat": 16.3067, "lon": 80.4365 },
+  "Coimbatore": { "lat": 11.0168, "lon": 76.9558 },
+  "Thiruvananthapuram": { "lat": 8.5241, "lon": 76.9366 },
+  "Patna": { "lat": 25.5941, "lon": 85.1376 },
+  "Jaipur": { "lat": 26.9124, "lon": 75.7873 }
+}

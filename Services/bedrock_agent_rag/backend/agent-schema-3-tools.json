@@ -1,0 +1,169 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Farmer Voice AI Tools - 3 Tools",
+    "version": "2.0.0",
+    "description": "Three tools for agricultural advisory: Knowledge Base search, DynamoDB farmer database, and web search"
+  },
+  "paths": {
+    "/search_icar_knowledge_base": {
+      "post": {
+        "summary": "Search ICAR agricultural knowledge base",
+        "description": "Search for information about crops, pests, diseases, fertilizers, irrigation, and farming practices from verified ICAR/FSSAI/CIBRC PDF sources. Use this for general agricultural knowledge and best practices.",
+        "operationId": "search_icar_knowledge_base",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "The farming question to search for in ICAR knowledge base (in Hindi or English)"
+                  }
+                },
+                "required": ["query"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Search results from ICAR knowledge base",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "content": {"type": "string"},
+                          "source": {"type": "string"}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/query_farmer_database": {
+      "post": {
+        "summary": "Query farmer database for regional and historical data",
+        "description": "Use this tool for farmer-specific records, regional crop data, past solutions, and any data stored in the local farmer database. Searches DynamoDB table with crop and problem fields. Use for questions about specific farmer experiences, regional issues, or historical solutions.",
+        "operationId": "query_farmer_database",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "keyword": {
+                    "type": "string",
+                    "description": "The keyword to search for in crop and problem fields (e.g., 'wheat', 'pest', 'irrigation')"
+                  },
+                  "query_type": {
+                    "type": "string",
+                    "description": "Type of query: 'crop', 'problem', 'solution', 'regional', or 'general'",
+                    "enum": ["crop", "problem", "solution", "regional", "general"]
+                  }
+                },
+                "required": ["keyword"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Matching farmer records from DynamoDB",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "query": {"type": "string"},
+                    "query_type": {"type": "string"},
+                    "count": {"type": "integer"},
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "farmer_id": {"type": "string"},
+                          "crop": {"type": "string"},
+                          "problem": {"type": "string"},
+                          "solution": {"type": "string"},
+                          "region": {"type": "string"},
+                          "date": {"type": "number"}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/web_search": {
+      "post": {
+        "summary": "Search the web for live information",
+        "description": "Search for current information about government schemes (PM-KISAN), mandi prices, weather, scheme disbursement dates, and other time-sensitive data. Use this for questions requiring up-to-date information not available in static knowledge bases.",
+        "operationId": "web_search",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "The query to search on the web for live information"
+                  }
+                },
+                "required": ["query"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Web search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "query": {"type": "string"},
+                    "count": {"type": "integer"},
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "title": {"type": "string"},
+                          "content": {"type": "string"},
+                          "url": {"type": "string"}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

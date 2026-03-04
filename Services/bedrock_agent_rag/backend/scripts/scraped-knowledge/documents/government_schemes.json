@@ -1,0 +1,62 @@
+[
+  {
+    "name_hi": "प्रधानमंत्री किसान सम्मान निधि (PM-KISAN)",
+    "name_en": "PM-KISAN",
+    "description": "₹6000 प्रति वर्ष सीधे किसानों के खाते में तीन किस्तों में",
+    "eligibility": "सभी भूमिधारक किसान परिवार",
+    "benefits": "₹2000 की तीन किस्तें प्रति वर्ष",
+    "how_to_apply": "ऑनलाइन आवेदन pmkisan.gov.in पर या नजदीकी CSC केंद्र पर",
+    "documents_required": "आधार कार्ड, बैंक खाता, भूमि दस्तावेज",
+    "helpline": "155261 / 011-24300606",
+    "url": "https://pmkisan.gov.in/",
+    "category": "financial_assistance"
+  },
+  {
+    "name_hi": "प्रधानमंत्री फसल बीमा योजना (PMFBY)",
+    "name_en": "Pradhan Mantri Fasal Bima Yojana",
+    "description": "प्राकृतिक आपदाओं से फसल नुकसान की भरपाई",
+    "eligibility": "सभी किसान (भूमिधारक और किरायेदार)",
+    "benefits": "फसल नुकसान पर बीमा राशि, कम प्रीमियम (खरीफ 2%, रबी 1.5%)",
+    "how_to_apply": "बैंक, CSC, या pmfby.gov.in पर ऑनलाइन",
+    "documents_required": "आधार कार्ड, बैंक खाता, भूमि दस्तावेज, बुवाई प्रमाण पत्र",
+    "helpline": "011-23382012",
+    "url": "https://pmfby.gov.in/",
+    "category": "insurance"
+  },
+  {
+    "name_hi": "किसान क्रेडिट कार्ड (KCC)",
+    "name_en": "Kisan Credit Card",
+    "description": "कम ब्याज दर पर कृषि ऋण",
+    "eligibility": "सभी किसान (व्यक्तिगत/संयुक्त)",
+    "benefits": "4% ब्याज दर (समय पर भुगतान पर), ₹3 लाख तक बिना गारंटी",
+    "how_to_apply": "नजदीकी बैंक शाखा में आवेदन करें",
+    "documents_required": "आधार कार्ड, पैन कार्ड, भूमि दस्तावेज, पासपोर्ट फोटो",
+    "helpline": "बैंक शाखा से संपर्क करें",
+    "url": "https://www.india.gov.in/spotlight/kisan-credit-card-kcc",
+    "category": "credit"
+  },
+  {
+    "name_hi": "मृदा स्वास्थ्य कार्ड योजना",
+    "name_en": "Soil Health Card Scheme",
+    "description": "मुफ्त मिट्टी परीक्षण और सिफारिशें",
+    "eligibility": "सभी किसान",
+    "benefits": "मुफ्त मिट्टी परीक्षण, पोषक तत्वों की जानकारी, उर्वरक सिफारिशें",
+    "how_to_apply": "नजदीकी कृषि विभाग कार्यालय या मिट्टी परीक्षण प्रयोगशाला",
+    "documents_required": "आधार कार्ड, भूमि दस्तावेज",
+    "helpline": "राज्य कृषि विभाग",
+    "url": "https://soilhealth.dac.gov.in/",
+    "category": "soil_health"
+  },
+  {
+    "name_hi": "प्रधानमंत्री कृषि सिंचाई योजना (PMKSY)",
+    "name_en": "PM Krishi Sinchayee Yojana",
+    "description": "सिंचाई सुविधाओं का विस्तार और जल संरक्षण",
+    "eligibility": "सभी किसान",
+    "benefits": "ड्रिप/स्प्रिंकलर सिंचाई पर सब्सिडी, जल संरक्षण उपकरण",
+    "how_to_apply": "जिला कृषि कार्यालय में आवेदन",
+    "documents_required": "आधार कार्ड, भूमि दस्तावेज, बैंक खाता",
+    "helpline": "राज्य कृषि विभाग",
+    "url": "https://pmksy.gov.in/",
+    "category": "irrigation"
+  }
+]

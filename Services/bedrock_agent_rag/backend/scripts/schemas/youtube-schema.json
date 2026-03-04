@@ -1,0 +1,43 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "YouTube Search Tool",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/search_youtube_videos": {
+      "post": {
+        "summary": "Search YouTube for farming tutorial videos",
+        "description": "Search YouTube for educational farming videos in Hindi. Use when farmer needs visual guidance, step-by-step tutorials, or wants to see practical demonstrations.",
+        "operationId": "search_youtube_videos",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Search query for YouTube videos"
+                  },
+                  "max_results": {
+                    "type": "integer",
+                    "description": "Maximum number of videos to return (default: 5)",
+                    "default": 5
+                  }
+                },
+                "required": ["query"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "YouTube video search results"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "YouTube Search",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/search_youtube_videos": {
+      "post": {
+        "summary": "Search videos",
+        "operationId": "search_youtube_videos",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string"
+                  },
+                  "max_results": {
+                    "type": "integer",
+                    "default": 5
+                  }
+                },
+                "required": ["query"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  }
+}

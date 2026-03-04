@@ -1,0 +1,23 @@
+{
+  "name": "kisanvoice-irrigation",
+  "version": "1.0.0",
+  "description": "Smart Irrigation Alert System - Feature 3",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "seed:crops": "node scripts/seed-crop-data.js",
+    "seed:monsoon": "node scripts/seed-monsoon-calendar.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.490.0",
+    "@aws-sdk/client-eventbridge": "^3.490.0",
+    "@aws-sdk/client-secrets-manager": "^3.490.0",
+    "@aws-sdk/lib-dynamodb": "^3.490.0",
+    "axios": "^1.6.5",
+    "twilio": "^4.20.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
