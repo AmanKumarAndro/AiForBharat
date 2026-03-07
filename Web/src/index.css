@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-hindi: 'Noto Sans Devanagari', sans-serif;
+
+  --color-green-primary: #1B5E20;
+  --color-green-dark: #0D3B12;
+  --color-green-light: #F0FDF4;
+  --color-green-accent: #D1FAE5;
+  --color-green-mid: #10B981;
+
+  --color-surface: #FAFBFC;
+  --color-card: #FFFFFF;
+  --color-border: #F3F4F6;
+  --color-border-accent: #E5E7EB;
+
+  --color-text-primary: #111827;
+  --color-text-secondary: #4B5563;
+  --color-text-muted: #9CA3AF;
+
+  --color-blue-soft: #EEF6FF;
+  --color-blue-accent: #3B82F6;
+  --color-orange-soft: #FFF7ED;
+  --color-orange-accent: #F97316;
+  --color-purple-soft: #F5F3FF;
+  --color-purple-accent: #8B5CF6;
+  --color-amber-soft: #FFFBEB;
+  --color-amber-accent: #F59E0B;
+  --color-emerald-soft: #ECFDF5;
+  --color-emerald-accent: #10B981;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Pulse animation for mic button */
+@keyframes mic-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.15);
+    opacity: 0.7;
+  }
+}
+
+.animate-mic-pulse {
+  animation: mic-pulse 2s ease-in-out infinite;
+}
+
+/* Float animation */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Slide in animation */
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.7s ease-out forwards;
+}
+
+/* Stagger children */
+.stagger>* {
+  opacity: 0;
+  animation: slide-up 0.5s ease-out forwards;
+}
+
+.stagger>*:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.stagger>*:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.stagger>*:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.stagger>*:nth-child(4) {
+  animation-delay: 0.35s;
+}
+
+.stagger>*:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+.stagger>*:nth-child(6) {
+  animation-delay: 0.45s;
+}
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(135deg, #1B5E20, #10B981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* Section fade-in on scroll */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
