@@ -6,7 +6,7 @@
 
 ## 1. System Overview
 
-**KisanVoice AI** is a distributed, serverless platform comprising a React Native mobile app and 6 independent backend microservices, all deployed on AWS. The platform provides voice-first agricultural intelligence in Hindi for Indian farmers.
+**KisanVoice AI** is a distributed, serverless platform comprising a React Native mobile app, a React web application (landing page + admin dashboard), and 7 independent backend microservices, all deployed on AWS. The platform provides voice-first agricultural intelligence in Hindi for Indian farmers.
 
 ### Design Principles
 - **Voice-First**: All features accessible through Hindi voice interaction
@@ -56,6 +56,66 @@ App.tsx
 
 ### Screen Count: 27
 See [FEATURES.md](FEATURES.md) for complete screen listing.
+
+---
+
+## 2.5 Web Application (`Web/`)
+
+> **🔑 Admin Access (for judges/instructors):** URL: `<deployed-url>/admin` · Admin ID: `admin` · Password: `kisanvoice2026`
+
+### Tech Stack
+| Component | Technology |
+|-----------|-----------|
+| Framework | React 19 + Vite 7 |
+| Styling | Tailwind CSS 4 (`@tailwindcss/vite` plugin) |
+| Routing | React Router v7 (`react-router-dom`) |
+| Fonts | Inter (400–900), Noto Sans Devanagari (400–700) via Google Fonts |
+| Build Tool | Vite with `@vitejs/plugin-react` |
+| Linting | ESLint 9 with React hooks + refresh plugins |
+
+### Architecture
+```
+main.jsx
+  └── BrowserRouter
+        ├── Route "/"      → App.jsx (Landing Page)
+        └── Route "/admin" → AdminGuard → AdminDashboard
+```
+
+### Landing Page (`App.jsx`) — Static Showcase
+| Section | Description |
+|---------|-------------|
+| **Navbar** | Responsive navigation with scroll toggle |
+| **Hero** | Headline, description, CTA buttons |
+| **VoiceBanner** | Hindi voice interaction CTA card |
+| **FeaturesGrid** | Platform feature cards (Weather, Market, Irrigation, etc.) |
+| **ServicesSection** | Backend services architecture showcase |
+| **TechStack** | AWS, AI, mobile technology stack display |
+| **Impact** | Impact metrics (water savings, yield increase, ROI) |
+| **HowItWorks** | Step-by-step user flow explanation |
+| **CTAFooter** | Call-to-action footer |
+| **Footer** | Site footer with links |
+
+### Admin Dashboard (`src/admin/`)
+| Component | Purpose |
+|-----------|---------|
+| `AdminGuard.jsx` | Session-based authentication gate (sessionStorage) |
+| `AdminDashboard.jsx` | 6-tab analytics dashboard consuming Master Dashboard API |
+
+### Admin Dashboard Tabs
+| Tab | API Endpoint | Data Displayed |
+|-----|-------------|----------------|
+| Overview | `/dashboard/overview` | Total farmers, voice queries, alerts, services |
+| Voice AI | `/dashboard/features/voice-ai` | Session count, top questions, latency |
+| Helping Hand | `/dashboard/features/helping-hand` | Service requests, providers, treatments |
+| Irrigation | `/dashboard/features/irrigation` | Enrolled farmers, crop data, SMS logs, savings |
+| Users | `/dashboard/users` | Cross-system user aggregation with deduplication |
+| Activity | `/dashboard/activity` | Recent activity feed |
+
+### API Integration
+- **Base URL**: `https://[api-id].execute-api.ap-south-1.amazonaws.com`
+- **Method**: All GET requests
+- **Error Handling**: Graceful fallback with loading states
+- **Refresh**: Manual refresh button per tab
 
 ---
 
@@ -377,12 +437,71 @@ src/
 
 ---
 
+### 3.7 Master Dashboard API (`Services/master_dashboard/`)
+
+| Attribute | Value |
+|-----------|-------|
+| Runtime | Node.js 18.x |
+| Framework | Serverless Framework |
+| Database | 15+ DynamoDB tables (read-only access) |
+| Deployment | `npx serverless deploy` |
+| Region | `ap-south-1` (Mumbai) |
+| Memory | 512 MB |
+| Timeout | 10 seconds |
+
+#### API Endpoints
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/dashboard/overview` | Aggregated platform metrics |
+| GET | `/dashboard/activity` | Recent activity feed (configurable limit) |
+| GET | `/dashboard/farmers` | Farmer analytics by state, city, registration |
+| GET | `/dashboard/ai-usage` | Voice AI query analytics |
+| GET | `/dashboard/alerts` | Weather + irrigation alert counts |
+| GET | `/dashboard/services` | Helping Hand service request metrics |
+| GET | `/dashboard/features` | Complete feature aggregation (14 parallel DynamoDB scans) |
+| GET | `/dashboard/features/voice-ai` | Voice AI session details |
+| GET | `/dashboard/features/helping-hand` | Full Helping Hand data |
+| GET | `/dashboard/features/irrigation` | Full irrigation system data |
+| GET | `/dashboard/users` | Cross-system user aggregation with deduplication |
+
+#### DynamoDB Tables Accessed (15+)
+| System | Tables |
+|--------|--------|
+| Authentication | `kisanvoice-auth-api-dev-farmers` |
+| Voice AI | `farmer-voice-ai-dev-sessions` |
+| Helping Hand | `HH_Requests`, `HH_Providers`, `HH_TreatmentDB`, `HH_BannedPesticides`, `HH_KVKContacts`, `HH_PincodeMappings` |
+| Irrigation | `kisanvoice-irrigation-dev-farmers`, `kisanvoice-irrigation-dev-crop-data`, `kisanvoice-irrigation-dev-monsoon-calendar`, `kisanvoice-irrigation-dev-savings`, `kisanvoice-irrigation-dev-sms-log`, `kisanvoice-irrigation-dev-soil-state` |
+
+#### Source Structure
+```
+src/
+├── index.js                     # Lambda handler, route management
+├── services/
+│   ├── aggregator.js            # High-level cross-feature aggregation
+│   ├── features.js              # Feature-specific data (14 scan functions)
+│   └── dynamodb.js              # Low-level DB operations (count, activity, groupBy)
+└── utils/
+    └── response.js              # Standardized HTTP response helpers
+scripts/
+├── discover-tables.js           # DynamoDB table discovery utility
+├── inspect-tables.js            # Table data inspection tool
+└── check-all-users.js           # User audit script
+```
+
+#### Design Patterns
+- **Parallel Execution**: `Promise.all()` for multi-table aggregation (up to 14 parallel scans)
+- **Graceful Degradation**: Each scan wrapped in try/catch returning safe defaults
+- **User Deduplication**: Merges users across auth, irrigation, and service request systems by phone number
+- **Read-Only**: IAM limited to `dynamodb:Scan`, `dynamodb:Query`, `dynamodb:GetItem`
+
+---
+
 ## 4. Infrastructure
 
 ### AWS Services Used
 | Service | Usage |
 |---------|-------|
-| Lambda | All compute (6 services, 30+ functions) |
+| Lambda | All compute (8 services, 30+ functions) |
 | API Gateway | REST APIs for all services |
 | DynamoDB | All databases (on-demand billing) |
 | Bedrock | AI models (Claude, Llama 3, Nova) |
@@ -397,7 +516,7 @@ src/
 ### Regions
 | Service | Region | Reason |
 |---------|--------|--------|
-| Login, Irrigation, Helping Hand, Weather | `ap-south-1` | Low latency for Indian users |
+| Login, Irrigation, Helping Hand, Weather, Dashboard | `ap-south-1` | Low latency for Indian users |
 | Bedrock Agent, Market | `us-east-1` | Full Bedrock model availability |
 
 ### Cost Estimate (1,000 farmers)
@@ -407,7 +526,7 @@ src/
 | DynamoDB | ~$3 |
 | Bedrock AI | ~$1 |
 | Twilio SMS | ~$237 |
-| **Total** | **~$246/month** |
+| **Total** | **~$248/month** |
 
 ---
 

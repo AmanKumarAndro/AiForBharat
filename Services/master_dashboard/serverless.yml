@@ -1,0 +1,89 @@
+service: master-analytics-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-south-1
+  stage: ${opt:stage, 'dev'}
+  memorySize: 512
+  timeout: 10
+  
+  environment:
+    FARMERS_TABLE: ${self:custom.tables.farmers}
+    VOICE_QUERIES_TABLE: ${self:custom.tables.voiceQueries}
+    WEATHER_ALERTS_TABLE: ${self:custom.tables.weatherAlerts}
+    IRRIGATION_ALERTS_TABLE: ${self:custom.tables.irrigationAlerts}
+    SERVICE_REQUESTS_TABLE: ${self:custom.tables.serviceRequests}
+    MARKET_QUERIES_TABLE: ${self:custom.tables.marketQueries}
+  
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Scan
+            - dynamodb:Query
+            - dynamodb:GetItem
+          Resource:
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.tables.farmers}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.tables.voiceQueries}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.tables.weatherAlerts}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.tables.irrigationAlerts}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.tables.serviceRequests}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.tables.marketQueries}
+            - arn:aws:dynamodb:${self:provider.region}:*:table/farmer-voice-ai-dev-sessions
+            - arn:aws:dynamodb:${self:provider.region}:*:table/HH_*
+            - arn:aws:dynamodb:${self:provider.region}:*:table/kisanvoice-irrigation-dev-*
+
+custom:
+  tables:
+    farmers: kisanvoice-auth-api-dev-farmers
+    voiceQueries: farmer-voice-ai-dev-sessions
+    weatherAlerts: weather_alert_logs  # TODO: Create this table or update with actual name
+    irrigationAlerts: kisanvoice-irrigation-dev-sms-log  # Using SMS log as proxy for alerts
+    serviceRequests: HH_Requests
+    marketQueries: market_queries_table  # TODO: Create this table or update with actual name
+
+functions:
+  api:
+    handler: src/index.handler
+    events:
+      - httpApi:
+          path: /dashboard/{proxy+}
+          method: GET
+      - httpApi:
+          path: /dashboard/overview
+          method: GET
+      - httpApi:
+          path: /dashboard/activity
+          method: GET
+      - httpApi:
+          path: /dashboard/farmers
+          method: GET
+      - httpApi:
+          path: /dashboard/ai-usage
+          method: GET
+      - httpApi:
+          path: /dashboard/alerts
+          method: GET
+      - httpApi:
+          path: /dashboard/services
+          method: GET
+      - httpApi:
+          path: /dashboard/features
+          method: GET
+      - httpApi:
+          path: /dashboard/features/voice-ai
+          method: GET
+      - httpApi:
+          path: /dashboard/features/helping-hand
+          method: GET
+      - httpApi:
+          path: /dashboard/features/irrigation
+          method: GET
+      - httpApi:
+          path: /dashboard/users
+          method: GET
+
+plugins:
+  - serverless-offline

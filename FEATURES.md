@@ -1,6 +1,6 @@
 # 🌾 KisanVoice AI — Features
 
-> Complete feature catalog for all 7 components of the AI For Bharat platform.
+> Complete feature catalog for all 9 components of the AI For Bharat platform.
 
 ---
 
@@ -45,6 +45,40 @@
 - Bottom Tab Navigator: Home, My Farm, Voice Query (center), Queries, Tools
 - Stack Navigator for deep screen flows
 - Smooth animations and transitions
+
+---
+
+## 🌐 Web Landing Page + Admin Dashboard (`Web/`)
+
+### Landing Page (Static Showcase)
+| Feature | Description |
+|---------|-------------|
+| **Hero Section** | Headline, description, and CTA buttons with animated scroll effects |
+| **Features Grid** | Interactive feature cards displaying platform capabilities |
+| **Services Architecture** | Visual showcase of all 7 backend microservices |
+| **Tech Stack** | AWS, AI/ML, and mobile technology stack with icons |
+| **Impact Metrics** | Water savings (30–40%), cost reduction, yield increase stats |
+| **How It Works** | Step-by-step user journey explanation |
+| **Responsive Design** | Mobile-first layout with Inter + Noto Sans Devanagari fonts |
+| **Scroll Animations** | Intersection Observer-based fade-in effects |
+
+### Admin Dashboard (`/admin`)
+| Feature | Description |
+|---------|-------------|
+| **Session Auth** | Simple admin login gate with session storage |
+| **Overview Tab** | Total farmers, voice queries, weather alerts, irrigation alerts, service requests |
+| **Voice AI Tab** | Session analytics, top questions, average latency |
+| **Helping Hand Tab** | Service requests by status/type, providers, treatments, banned pesticides, KVK contacts |
+| **Irrigation Tab** | Enrolled farmers, crop data, monsoon calendar, water savings, SMS logs, soil state |
+| **Users Tab** | Cross-system user aggregation with phone-based deduplication |
+| **Activity Tab** | Real-time activity feed with configurable limit |
+| **Live Refresh** | Manual refresh button per tab for latest data |
+| **Stat Cards** | Color-coded metric cards with icons |
+
+> **🔑 Admin Access (for judges/instructors):**
+> - URL: `<deployed-url>/admin`
+> - Admin ID: `admin`
+> - Password: `kisanvoice2026`
 
 ---
 
@@ -197,6 +231,40 @@
 | **10 API Endpoints** | Complete REST API for all operations |
 | **Twilio Integration** | SMS send + webhook for replies |
 | **Postman Collection** | Complete API testing collection included |
+
+---
+
+## 📈 Master Dashboard Analytics API (`Services/master_dashboard/`)
+
+### Platform Overview
+| Feature | Description |
+|---------|-------------|
+| **Aggregated Metrics** | Total farmers, daily voice queries, weather + irrigation alerts, service requests |
+| **Cross-Service Data** | Unified view across 15+ DynamoDB tables from all platform services |
+| **Real-time Activity** | Chronological feed of recent platform activity |
+
+### Farmer Analytics
+| Feature | Description |
+|---------|-------------|
+| **Geographic Distribution** | Farmer count by state and city |
+| **Registration Tracking** | New farmer registrations per day |
+| **Profile Completion** | Track onboarding completion rates |
+| **Multi-Source Aggregation** | Merge users from auth, irrigation, and service request systems |
+| **Phone Deduplication** | Single user view across systems using phone as key |
+
+### Feature-Specific Analytics
+| Feature | Description |
+|---------|-------------|
+| **Voice AI Sessions** | Total sessions, top questions asked, average latency |
+| **Helping Hand Data** | Service requests by status/type, provider directory, treatment database, banned pesticides, KVK contacts, pincode mappings |
+| **Irrigation Monitoring** | Enrolled farmers, crop data, monsoon calendar, water savings, SMS log, soil moisture state |
+
+### Infrastructure Utilities
+| Feature | Description |
+|---------|-------------|
+| **Table Discovery** | Script to discover all DynamoDB tables |
+| **Data Inspection** | Script to inspect table contents and schemas |
+| **User Audit** | Script to check all users across systems |
 
 ---
 

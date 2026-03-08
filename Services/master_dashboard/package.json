@@ -1,0 +1,20 @@
+{
+  "name": "master-analytics-api",
+  "version": "1.0.0",
+  "description": "Master Analytics Service for AWS Dashboard",
+  "main": "src/index.js",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "local": "serverless offline",
+    "discover": "node scripts/discover-tables.js",
+    "inspect": "node scripts/inspect-tables.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.515.0",
+    "@aws-sdk/lib-dynamodb": "^3.515.0"
+  },
+  "devDependencies": {
+    "serverless": "^3.38.0",
+    "serverless-offline": "^13.3.3"
+  }
+}

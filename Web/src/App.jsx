@@ -173,7 +173,7 @@ function Hero() {
           {/* Stats strip */}
           <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto stagger">
             {[
-              { value: '6', label: 'AI Services', icon: <Server className="w-4 h-4" /> },
+              { value: '8', label: 'Integrated AI Services', icon: <Server className="w-4 h-4" /> },
               { value: '27', label: 'App Screens', icon: <Phone className="w-4 h-4" /> },
               { value: '30+', label: 'Lambda Functions', icon: <Zap className="w-4 h-4" /> },
               { value: '$0.0005', label: 'Per AI Query', icon: <BarChart className="w-4 h-4" /> },
@@ -248,7 +248,7 @@ function FeaturesGrid() {
         <div className={`text-center mb-16 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <p className="text-sm font-bold text-[#10B981] tracking-widest uppercase mb-3">Platform Features</p>
           <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-gray-900 mb-4">Everything a Farmer Needs</h2>
-          <p className="text-gray-500 max-w-xl mx-auto">One app, one voice — access six integrated AI services for smarter farming.</p>
+          <p className="text-gray-500 max-w-xl mx-auto">One app, one voice — access eight integrated services for smarter farming.</p>
         </div>
 
         <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 ${vis ? 'stagger' : ''}`}>
@@ -281,6 +281,8 @@ function ServicesSection() {
     { name: 'Irrigation Alerts', tech: 'Node.js · EventBridge · Twilio', desc: 'FAO-56 soil moisture + 6 crop types · 6 growth stages · bilingual SMS', color: 'bg-emerald-500', endpoints: '12 functions' },
     { name: 'Live Market', tech: 'Python · data.gov.in · Nova Micro', desc: 'Real-time commodity prices → AI analysis → buy/sell recommendations', color: 'bg-green-500', endpoints: '2 endpoints' },
     { name: 'Helping Hand', tech: 'Python · DynamoDB · Twilio SMS', desc: 'Farmer requests → top 3 providers notified → reply YES to accept', color: 'bg-amber-500', endpoints: '10 endpoints' },
+    { name: 'Master Dashboard', tech: 'Node.js · Serverless · DynamoDB', desc: 'Unified analytics API aggregating data from 15+ DynamoDB tables across all services', color: 'bg-indigo-500', endpoints: '11 endpoints' },
+    { name: 'Web Landing + Admin', tech: 'React 19 · Vite · Tailwind CSS 4', desc: 'Static project showcase + live admin analytics dashboard with 6 tabs', color: 'bg-cyan-500', screens: '2 pages' },
   ]
 
   return (
@@ -288,7 +290,7 @@ function ServicesSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className={`text-center mb-16 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <p className="text-sm font-bold text-[#10B981] tracking-widest uppercase mb-3">System Architecture</p>
-          <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-gray-900 mb-4">7 Integrated Components</h2>
+          <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-gray-900 mb-4">9 Integrated Components</h2>
           <p className="text-gray-500 max-w-xl mx-auto">Each service is independently deployable on AWS Lambda with its own API, database, and deployment pipeline.</p>
         </div>
 
@@ -486,7 +488,7 @@ function CTAFooter() {
           Built with ❤️ for<br />Indian Farmers
         </h2>
         <p className="text-green-100/70 text-lg mb-8 max-w-xl mx-auto">
-          Open source. 6 AI services. 27 screens. 100% serverless. Production deployed on AWS.
+          Open source. 8 integrated services. 27 mobile screens. 100% serverless. Production deployed on AWS.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <a href="https://github.com/AmanKumarAndro/AiForBharat" target="_blank" rel="noreferrer"

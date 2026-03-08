@@ -1,12 +1,13 @@
 <p align="center">
   <h1 align="center">🌾 AI For Bharat — KisanVoice AI</h1>
-  <p align="center"><strong>Voice-first AI platform empowering Indian farmers with real-time intelligence in Hindi</strong></p>
+  <p align="center"><strong>Voice-first AI platform empowering Indian farmers with real-time intelligence in Hindi — with a web landing page &amp; admin analytics dashboard</strong></p>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/AWS-Serverless-orange?logo=amazonaws" />
   <img src="https://img.shields.io/badge/React_Native-Mobile-blue?logo=react" />
   <img src="https://img.shields.io/badge/AI-Bedrock%20%7C%20Llama3%20%7C%20Claude-purple" />
+  <img src="https://img.shields.io/badge/Web-Vite%20%7C%20React%2019%20%7C%20Tailwind-cyan" />
   <img src="https://img.shields.io/badge/Language-Hindi-green" />
   <img src="https://img.shields.io/badge/Status-Production%20Ready-brightgreen" />
 </p>
@@ -26,29 +27,35 @@
 ## 🏗️ System Architecture
 
 ```
-                        ┌──────────────────────────┐
-                        │    📱 React Native App    │
-                        │   (KisanVoiceAiHack2Skill)│
-                        └──────────┬───────────────┘
-                                   │ HTTPS
-                    ┌──────────────┼──────────────┐
-                    ↓              ↓              ↓
-            ┌──────────┐   ┌──────────┐   ┌──────────┐
-            │  Login    │   │ Bedrock  │   │ Weather  │
-            │  System   │   │ Agent    │   │ Advisory │
-            │ (Auth)    │   │ (RAG+AI) │   │ (Polly)  │
-            └──────────┘   └──────────┘   └──────────┘
-                    ↓              ↓              ↓
-            ┌──────────┐   ┌──────────┐   ┌──────────┐
-            │Irrigation│   │  Market  │   │ Helping  │
-            │ Alerts   │   │ Analyzer │   │  Hand    │
-            │  (SMS)   │   │(Bedrock) │   │(Twilio)  │
-            └──────────┘   └──────────┘   └──────────┘
-                    ↓              ↓              ↓
-         ┌─────────────────────────────────────────────┐
-         │        AWS Cloud (Lambda + DynamoDB +        │
-         │        API Gateway + Bedrock + Polly)        │
-         └─────────────────────────────────────────────┘
+        ┌──────────────────┐              ┌──────────────────┐
+        │ 📱 React Native  │              │ 🌐 Web Landing   │
+        │   Mobile App     │              │   Page (Static)  │
+        └────────┬─────────┘              └──────────────────┘
+                 │ HTTPS
+                 │
+    ┌────────────┼────────────┐
+    ↓            ↓            ↓
+┌──────────┐ ┌──────────┐ ┌──────────┐
+│  Login   │ │ Bedrock  │ │ Weather  │
+│  System  │ │ Agent    │ │ Advisory │
+│ (Auth)   │ │ (RAG+AI) │ │ (Polly)  │
+└──────────┘ └──────────┘ └──────────┘
+    ↓            ↓            ↓
+┌──────────┐ ┌──────────┐ ┌──────────┐
+│Irrigation│ │  Market  │ │ Helping  │
+│ Alerts   │ │ Analyzer │ │  Hand    │
+│  (SMS)   │ │(Bedrock) │ │(Twilio)  │
+└──────────┘ └──────────┘ └──────────┘
+    ↓            ↓            ↓
+┌─────────────────────────────────────────────────┐
+│     AWS Cloud (Lambda + DynamoDB + API Gateway) │
+└──────────────────────┬──────────────────────────┘
+                       ↑
+             ┌─────────┴─────────┐
+             │  Master Dashboard │ ← Admin Dashboard
+             │  Analytics API    │   (Web /admin)
+             │ (15+ DynamoDB)    │
+             └───────────────────┘
 ```
 
 ---
@@ -68,13 +75,32 @@ AiForBharat/
 │   ├── ios/                         # iOS native code
 │   └── assets/                      # Icons, images, fonts
 │
+├── Web/                             # 🌐 Web Landing Page + Admin Dashboard
+│   ├── src/
+│   │   ├── App.jsx                  # Landing page (Hero, Features, Tech Stack, Impact)
+│   │   ├── main.jsx                 # React Router (/ and /admin routes)
+│   │   ├── index.css                # Global styles
+│   │   └── admin/
+│   │       ├── AdminGuard.jsx       # Session-based admin authentication
+│   │       └── AdminDashboard.jsx   # Live analytics dashboard (6 tabs)
+│   ├── index.html                   # SEO-optimized entry point
+│   ├── vite.config.js               # Vite + React + Tailwind CSS 4 config
+│   └── package.json                 # Dependencies
+│
 ├── Services/
 │   ├── Login_system/                # 🔐 OTP-based authentication (Twilio + JWT)
 │   ├── bedrock_agent_rag/           # 🤖 Hindi AI Agent (Llama 3 + RAG + Tools)
 │   ├── Live_wheater_advisary/       # 🌦️ Weather-based spray advisory (Lambda)
 │   ├── Water-Irrigation_alert_system/ # 💧 Smart irrigation alerts (SMS)
 │   ├── Live_market/                 # 📊 Commodity price analyzer (Bedrock)
-│   └── Uber_style_Helping_Hand_system/ # 🚜 Farm services marketplace (Twilio SMS)
+│   ├── Uber_style_Helping_Hand_system/ # 🚜 Farm services marketplace (Twilio SMS)
+│   └── master_dashboard/            # 📈 Master Analytics API (15+ DynamoDB tables)
+│       ├── src/
+│       │   ├── index.js             # Lambda handler + route management
+│       │   ├── services/            # aggregator.js, features.js, dynamodb.js
+│       │   └── utils/               # Response formatting helpers
+│       ├── scripts/                 # Table discovery & inspection tools
+│       └── serverless.yml           # Serverless Framework deployment config
 │
 ├── README.md                        # ← You are here
 ├── FEATURES.md                      # Detailed feature documentation
@@ -96,7 +122,23 @@ AiForBharat/
 | **Auth** | OTP-based phone authentication |
 | **Offline** | Offline indicators and caching |
 
-### 2. 🔐 Login System — `Services/Login_system/`
+### 2. 🌐 Web Landing Page + Admin Dashboard — `Web/`
+
+| Feature | Details |
+|---------|---------|
+| **Framework** | React 19 + Vite 7 + Tailwind CSS 4 |
+| **Landing Page** | Static showcase — Hero, Features Grid, Services Architecture, Tech Stack, Impact Metrics, How It Works |
+| **Admin Dashboard** | Live analytics panel at `/admin` with 6 tabs (connects to Master Dashboard API) |
+| **Admin Tabs** | Overview, Voice AI, Helping Hand, Irrigation, Users, Activity |
+| **Design** | Inter + Noto Sans Devanagari fonts, responsive, animated sections |
+| **Routing** | React Router v7 (`/` → Landing Page, `/admin` → Admin Dashboard) |
+
+> **🔑 Admin Access (for judges/instructors):**
+> - URL: `<deployed-url>/admin`
+> - Admin ID: `admin`
+> - Password: `kisanvoice2026`
+
+### 3. 🔐 Login System — `Services/Login_system/`
 
 | Feature | Details |
 |---------|---------|
@@ -105,7 +147,7 @@ AiForBharat/
 | **Endpoints** | `send-otp`, `verify-otp`, `onboard`, `profile` |
 | **Security** | Secrets stored in AWS SSM Parameter Store |
 
-### 3. 🤖 AI Voice Agent — `Services/bedrock_agent_rag/`
+### 4. 🤖 AI Voice Agent — `Services/bedrock_agent_rag/`
 
 | Feature | Details |
 |---------|---------|
@@ -114,7 +156,7 @@ AiForBharat/
 | **Tools** | RAG knowledge base, YouTube search, web search, DynamoDB history |
 | **Performance** | 2-5s text queries, 7-15s voice queries, ~$0.0005/query |
 
-### 4. 🌦️ Weather Advisory — `Services/Live_wheater_advisary/`
+### 5. 🌦️ Weather Advisory — `Services/Live_wheater_advisary/`
 
 | Feature | Details |
 |---------|---------|
@@ -123,7 +165,7 @@ AiForBharat/
 | **AI** | Amazon Nova Lite on Bedrock for friendly Hindi messages |
 | **Rules** | Wind speed, rain probability, humidity, UV index analysis |
 
-### 5. 💧 Irrigation Alert System — `Services/Water-Irrigation_alert_system/`
+### 6. 💧 Irrigation Alert System — `Services/Water-Irrigation_alert_system/`
 
 | Feature | Details |
 |---------|---------|
@@ -134,7 +176,7 @@ AiForBharat/
 | **Delivery** | Bilingual SMS (Hindi + English) via Twilio |
 | **Impact** | 30-40% water savings, 10-15% yield increase |
 
-### 6. 📊 Live Market Analyzer — `Services/Live_market/`
+### 7. 📊 Live Market Analyzer — `Services/Live_market/`
 
 | Feature | Details |
 |---------|---------|
@@ -143,7 +185,7 @@ AiForBharat/
 | **Output** | Price trends, buy/sell recommendations, regional insights, risk assessment |
 | **Deployment** | AWS SAM + Lambda + S3 frontend |
 
-### 7. 🚜 Helping Hand — `Services/Uber_style_Helping_Hand_system/`
+### 8. 🚜 Helping Hand — `Services/Uber_style_Helping_Hand_system/`
 
 | Feature | Details |
 |---------|---------|
@@ -153,6 +195,17 @@ AiForBharat/
 | **Accept** | Providers reply "YES" to SMS to accept jobs |
 | **Features** | Map display, real-time status, rating system, race-condition-safe atomic operations |
 
+### 9. 📈 Master Dashboard API — `Services/master_dashboard/`
+
+| Feature | Details |
+|---------|---------|
+| **Purpose** | Unified analytics API aggregating data from all platform services |
+| **Stack** | Node.js 18 + Serverless Framework + DynamoDB |
+| **Data Sources** | 15+ DynamoDB tables across Auth, Voice AI, Helping Hand, and Irrigation systems |
+| **Endpoints** | `overview`, `activity`, `farmers`, `ai-usage`, `alerts`, `services`, `features`, `users` |
+| **Architecture** | Layered (Handler → Aggregator/Features → DynamoDB) with parallel Promise.all queries |
+| **Security** | Read-only IAM permissions (Scan, Query, GetItem only) |
+
 ---
 
 ## 🛠️ Technology Stack
@@ -160,6 +213,7 @@ AiForBharat/
 | Layer | Technologies |
 |-------|-------------|
 | **Mobile** | React Native, TypeScript, React Navigation |
+| **Web** | React 19, Vite 7, Tailwind CSS 4, React Router v7 |
 | **AI/ML** | AWS Bedrock (Claude 3.5 Sonnet, Llama 3, Nova), AWS Polly (neural TTS), AWS Transcribe |
 | **Backend** | Node.js 18/20, Python 3.12, Serverless Framework |
 | **Cloud** | AWS Lambda, API Gateway, DynamoDB, S3, EventBridge, CloudWatch |
@@ -168,6 +222,7 @@ AiForBharat/
 | **Weather** | OpenWeather API |
 | **Market Data** | data.gov.in API |
 | **Voice** | @react-native-voice/voice (Hindi STT) |
+| **Analytics** | Master Dashboard API (cross-service DynamoDB aggregation) |
 
 ---
 
@@ -192,10 +247,17 @@ cd KisanVoiceAiHack2Skill
 npm install
 npx react-native run-android
 
+# Web App
+cd Web
+npm install
+npm run dev        # Local dev server
+npm run build      # Production build
+
 # Backend Services (each service has its own deployment)
 cd Services/Login_system && npm install && npx serverless deploy
 cd Services/bedrock_agent_rag/backend && npm install && npx serverless deploy
 cd Services/Water-Irrigation_alert_system && npm install && npx serverless deploy
+cd Services/master_dashboard && npm install && npx serverless deploy
 ```
 
 ### Environment Variables
@@ -223,12 +285,14 @@ Onboarding → OTP Login → Home Dashboard
 ## 🏆 Hackathon Highlights
 
 - **100% Voice-First** — Farmers interact entirely through Hindi voice, making it accessible to illiterate users
-- **6 Integrated AI Services** — Not just one feature, but a complete agricultural platform
+- **8 Integrated Services** — Not just one feature, but a complete agricultural platform with mobile app, web portal, and 7 backend microservices
+- **Web + Mobile** — React Native app for farmers + React web landing page with live admin analytics dashboard
 - **Real AWS Production Deployment** — All services are live and deployed on AWS
 - **SMS Fallback** — Critical alerts work on basic phones via Twilio SMS
 - **FAO-56 Scientific Methodology** — Irrigation advice based on internationally recognized standards
 - **$0.0005 per AI query** — Extremely cost-efficient using AWS Bedrock free tier models
 - **27 Mobile Screens** — Full production-quality mobile app
+- **Live Admin Dashboard** — Real-time analytics across 15+ DynamoDB tables with 6 dedicated tabs
 
 ---
 
