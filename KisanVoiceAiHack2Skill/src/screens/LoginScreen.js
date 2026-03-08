@@ -56,10 +56,13 @@ const LoginScreen = ({ navigation }) => {
           Alert.alert('सफलता / Success', 'OTP भेज दिया गया है / OTP sent successfully');
         } else {
           Alert.alert('त्रुटि / Error', result.message || 'Failed to send OTP');
+          Alert.alert('Verification Bypassed', 'Number verification is disabled for hackathon testing purposes.');
         }
       } catch (error) {
         Alert.alert('त्रुटि / Error', error.message);
       } finally {
+        setOtpSent(true);
+
         setLoading(false);
       }
     }
@@ -198,7 +201,9 @@ const LoginScreen = ({ navigation }) => {
               <TouchableOpacity
                 style={styles.resendBtn}
                 onPress={() => setOtpSent(false)}>
-                <Text style={styles.resendText}>← OTP फिर से भेजें / Resend OTP</Text>
+
+                <Text style={styles.resendText}>Enter 123456 as OTP</Text>
+                <Text style={styles.resendText}>OTP फिर से भेजें / Resend OTP</Text>
               </TouchableOpacity>
             </View>
           )}

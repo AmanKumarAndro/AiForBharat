@@ -7,6 +7,8 @@ import {
   Animated,
   Alert,
   Platform,
+  Linking,
+  Image,
 } from 'react-native';
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,
@@ -278,6 +280,125 @@ const QueryAssistantScreen = ({ navigation }) => {
 
   const statusText = getStatusText();
 
+  // ── URL helpers ──────────────────────────────────────────────────────────
+  const URL_REGEX = /(https?:\/\/[^\s)।|,;:!]+)/g;
+
+  const getUrlType = (url) => {
+    if (/youtube\.com|youtu\.be/i.test(url)) return 'youtube';
+    if (/instagram\.com/i.test(url)) return 'instagram';
+    if (/facebook\.com|fb\.com/i.test(url)) return 'facebook';
+    if (/twitter\.com|x\.com/i.test(url)) return 'twitter';
+    return 'web';
+  };
+
+  const getCtaLabel = (type) => {
+    const labels = {
+      youtube: { icon: '▶', label: 'Watch on YouTube', labelHi: 'YouTube पर देखें', color: '#FF0000', bg: '#FFF0F0' },
+      instagram: { icon: '📷', label: 'View on Instagram', labelHi: 'Instagram पर देखें', color: '#E1306C', bg: '#FFF0F5' },
+      facebook: { icon: '📘', label: 'View on Facebook', labelHi: 'Facebook पर देखें', color: '#1877F2', bg: '#F0F4FF' },
+      twitter: { icon: '🐦', label: 'View on X', labelHi: 'X पर देखें', color: '#1DA1F2', bg: '#F0F8FF' },
+      web: { icon: '🌐', label: 'Open Website', labelHi: 'वेबसाइट खोलें', color: '#1B5E20', bg: '#F0FDF4' },
+    };
+    return labels[type] || labels.web;
+  };
+
+  const openUrl = (url) => {
+    Linking.openURL(url).catch(() => {
+      Alert.alert('Error', 'Could not open the link. Please try copying the URL manually.');
+    });
+  };
+
+  const getShortUrl = (url) => {
+    try {
+      const u = new URL(url);
+      const path = u.pathname + u.search;
+      const short = u.hostname + (path.length > 30 ? path.substring(0, 30) + '…' : path);
+      return short;
+    } catch { return url.substring(0, 40) + '…'; }
+  };
+
+  const renderResponseText = (text) => {
+    if (!text) return null;
+    const parts = text.split(URL_REGEX);
+    return parts.map((part, idx) => {
+      if (URL_REGEX.test(part)) {
+        URL_REGEX.lastIndex = 0;
+        return (
+          <Text key={idx} style={styles.inlineLink} onPress={() => openUrl(part)}>
+            {part}
+          </Text>
+        );
+      }
+      return <Text key={idx}>{part}</Text>;
+    });
+  };
+
+  const getYoutubeVideoId = (url) => {
+    const patterns = [
+      /youtube\.com\/watch\?v=([^&\s]+)/i,
+      /youtu\.be\/([^?\s]+)/i,
+      /youtube\.com\/embed\/([^?\s]+)/i,
+      /youtube\.com\/shorts\/([^?\s]+)/i,
+    ];
+    for (const p of patterns) {
+      const m = url.match(p);
+      if (m) return m[1];
+    }
+    return null;
+  };
+
+  const renderCtaButton = (url, index) => {
+    const type = getUrlType(url);
+    const cta = getCtaLabel(type);
+    const videoId = type === 'youtube' ? getYoutubeVideoId(url) : null;
+    const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : null;
+
+    if (thumbnailUrl) {
+      return (
+        <TouchableOpacity
+          key={`${url}-${index}`}
+          style={styles.ytCard}
+          onPress={() => openUrl(url)}
+          activeOpacity={0.85}
+        >
+          <View style={styles.ytThumbWrap}>
+            <Image source={{ uri: thumbnailUrl }} style={styles.ytThumb} resizeMode="cover" />
+            <View style={styles.ytPlayOverlay}>
+              <Text style={styles.ytPlayIcon}>▶</Text>
+            </View>
+          </View>
+          <View style={styles.ytInfo}>
+            <Text style={styles.ytLabel}>▶  Watch on YouTube</Text>
+            <Text style={styles.ytLabelHi}>YouTube पर देखें</Text>
+            <Text style={styles.ctaUrlPreview} numberOfLines={1}>{getShortUrl(url)}</Text>
+          </View>
+        </TouchableOpacity>
+      );
+    }
+
+    return (
+      <TouchableOpacity
+        key={`${url}-${index}`}
+        style={[styles.ctaBtn, { backgroundColor: cta.bg, borderColor: cta.color + '30' }]}
+        onPress={() => openUrl(url)}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.ctaIcon}>{cta.icon}</Text>
+        <View style={styles.ctaTextWrap}>
+          <Text style={[styles.ctaLabel, { color: cta.color }]}>{cta.label}</Text>
+          <Text style={styles.ctaUrlPreview} numberOfLines={1}>{getShortUrl(url)}</Text>
+        </View>
+        <Text style={[styles.ctaArrow, { color: cta.color }]}>→</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const extractedUrls = React.useMemo(() => {
+    if (!aiResponse) return [];
+    const matches = aiResponse.match(URL_REGEX);
+    return matches ? [...new Set(matches.map(u => u.replace(/[.,;:!]+$/, '')))] : [];
+  }, [aiResponse]);
+
   return (
     <View style={styles.container}>
       <Header title="Query Assistant" />
@@ -321,9 +442,16 @@ const QueryAssistantScreen = ({ navigation }) => {
               <Text style={styles.responseIcon}>✓</Text>
               <Text style={styles.responseSource}>ICAR Verified</Text>
             </View>
-            <Text style={styles.responseText}>{aiResponse}</Text>
+            <Text style={styles.responseText}>{renderResponseText(aiResponse)}</Text>
           </View>
         ) : null}
+
+        {/* CTA Buttons for links */}
+        {extractedUrls.length > 0 && (
+          <View style={styles.ctaContainer}>
+            {extractedUrls.map((url, i) => renderCtaButton(url, i))}
+          </View>
+        )}
 
         {/* Progress Section */}
         {isProcessing && (
@@ -474,6 +602,93 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: COLORS.text,
     lineHeight: 22,
+  },
+  inlineLink: {
+    color: COLORS.primary,
+    textDecorationLine: 'underline',
+    fontWeight: '700',
+  },
+  ctaContainer: {
+    marginBottom: 16,
+    gap: 8,
+  },
+  ctaBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderWidth: 1,
+  },
+  ctaIcon: {
+    fontSize: 22,
+    marginRight: 12,
+  },
+  ctaTextWrap: {
+    flex: 1,
+  },
+  ctaLabel: {
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  ctaUrlPreview: {
+    fontSize: 11,
+    fontWeight: '500',
+    marginTop: 2,
+    color: '#9CA3AF',
+  },
+  ctaArrow: {
+    fontSize: 20,
+    fontWeight: '700',
+    marginLeft: 8,
+  },
+  ytCard: {
+    backgroundColor: COLORS.white,
+    borderRadius: 16,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginBottom: 4,
+  },
+  ytThumbWrap: {
+    width: '100%',
+    height: 180,
+    backgroundColor: '#000',
+    position: 'relative',
+  },
+  ytThumb: {
+    width: '100%',
+    height: '100%',
+  },
+  ytPlayOverlay: {
+    position: 'absolute',
+    top: 0, left: 0, right: 0, bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.25)',
+  },
+  ytPlayIcon: {
+    fontSize: 40,
+    color: '#FFF',
+    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 6,
+  },
+  ytInfo: {
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  ytLabel: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#FF0000',
+  },
+  ytLabelHi: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#FF0000',
+    opacity: 0.7,
+    marginTop: 2,
   },
   progressSection: {
     marginBottom: 20,
